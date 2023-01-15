@@ -8,4 +8,4 @@ REM a cierta release. Por ejemplo build number 19044 equivale a W10 21H2
 REM 
 REM https://en.wikipedia.org/wiki/List_of_Microsoft_Windows_versions
 REM ------------------------------------------------------------
-FOR /F "tokens=2* skip=2" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "ReleaseID"') do echo %%b
+FOR /F "tokens=2* skip=2" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "CurrentBuildNumber"') do echo %%b
