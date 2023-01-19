@@ -14,7 +14,7 @@ $obj = Get-ItemProperty -Path $path | Select MaxInstanceCount
 
 if ($obj.MaxInstanceCount -eq $null) {
     # No ha encontrado la clave del registro
-    if ( $tipo_sistema -eq "Server" ) {
+    if ( $tipo_sistema -eq "Server" -or $tipo_sistema -eq "Server Core" ) {
         Write-Host 2
     } else {
         Write-Host 1 
