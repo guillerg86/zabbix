@@ -13,8 +13,8 @@
 $updateObject = New-Object -ComObject Microsoft.Update.Session
 $updateObject.ClientApplicationID = "WinUpdateCheck"
 $updateSearcher = $updateObject.CreateUpdateSearcher()
-$searchResults = $updateSearcher.Search("IsHidden=0 and IsInstalled=0")
-$mandatoryUpdates = $searchResults.Updates | Where-Object IsMandatory -eq $true
+$searchResults = $updateSearcher.Search("IsHidden=0 and IsInstalled=0 and Type !='Driver'")
+$mandatoryUpdates = $searchResults.Updates 
 
 $updates = [System.Collections.ArrayList]::new()
 $totalsize = 0; 
