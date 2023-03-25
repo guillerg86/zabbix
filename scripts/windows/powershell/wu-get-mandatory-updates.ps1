@@ -14,7 +14,7 @@ $updateObject = New-Object -ComObject Microsoft.Update.Session
 $updateObject.ClientApplicationID = "WinUpdateCheck"
 $updateSearcher = $updateObject.CreateUpdateSearcher()
 $searchResults = $updateSearcher.Search("IsHidden=0 and IsInstalled=0 and Type !='Driver'")
-$mandatoryUpdates = $searchResults.Updates 
+$mandatoryUpdates = $searchResults.Updates | Where-Object {$_.Title -notlike "*Microsoft Defender*"}
 
 $updates = [System.Collections.ArrayList]::new()
 $totalsize = 0; 
