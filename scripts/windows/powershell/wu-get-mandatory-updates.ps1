@@ -4,7 +4,7 @@
 # Obtiene las actualizaciones obligatorias que están disponibles
 # para instalar en un equipo Windows. Funciona tanto si es gestionado
 # por un sistema WSUS local, como si esta configurado para descargar
-# directamente desde Microsfot.
+# directamente desde Microsoft.
 #
 # Genera un output en formato Json para una mejor integración con otros
 # sistemas como: Zabbix, Web APIs, programas CLI
