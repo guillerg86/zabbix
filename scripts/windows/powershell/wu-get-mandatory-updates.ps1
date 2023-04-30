@@ -29,7 +29,7 @@ foreach($update in $mandatoryUpdates) {
 }
  
 $new_obj = New-Object -TypeName psobject
-$new_obj | Add-Member -NotePropertyName count -NotePropertyValue $mandatoryUpdates.Count
+$new_obj | Add-Member -NotePropertyName count -NotePropertyValue $updates.Count
 $new_obj | Add-Member -NotePropertyName updates -NotePropertyValue $updates
 $new_obj | Add-Member -NotePropertyName totalsize -NotePropertyValue $totalsize
 
