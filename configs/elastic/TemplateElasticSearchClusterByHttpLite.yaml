@@ -1,0 +1,174 @@
+zabbix_export:
+  version: '6.4'
+  template_groups:
+    - uuid: a571c0d144b14fd4a87a9d9b2aa9fcd6
+      name: Templates/Applications
+  templates:
+    - uuid: 36bef09f48df4d8fb9b438f3e3734927
+      template: 'Template App Elasticsearch Cluster by HTTP Lite'
+      name: 'Template App Elasticsearch Cluster by HTTP Lite'
+      description: 'A template for check Health Status of Elastic without grabbing all other stuff'
+      groups:
+        - name: Templates/Applications
+      items:
+        - uuid: 0f7799f028a24fdd801f58d618463720
+          name: 'Cluster Active Shards Percent'
+          type: DEPENDENT
+          key: elastic.cluster.active_shards_percent_as_number
+          delay: '0'
+          history: 7d
+          value_type: FLOAT
+          description: 'Number of active shards percent'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.active_shards_percent_as_number
+          master_item:
+            key: 'elastic.cluster.status.raw[{$ELASTIC_PROTO},{$ELASTIC_USER},{$ELASTIC_PASSWORD},{$ELASTIC_HOST},{$ELASTIC_PORT}]'
+          triggers:
+            - uuid: 7bfd4c745a2c45fe821579e5ccf7fc35
+              expression: 'last(/Template App Elasticsearch Cluster by HTTP Lite/elastic.cluster.active_shards_percent_as_number)<={$ELASTIC_SYNC_AVERAGE}'
+              name: 'Elastic cluster sync status is less than {$ELASTIC_SYNC_AVERAGE}%'
+              opdata: '{ITEM.LASTVALUE}'
+              priority: AVERAGE
+              manual_close: 'YES'
+              dependencies:
+                - name: 'Elastic cluster sync status is less than {$ELASTIC_SYNC_HIGH}%'
+                  expression: 'last(/Template App Elasticsearch Cluster by HTTP Lite/elastic.cluster.active_shards_percent_as_number)<={$ELASTIC_SYNC_HIGH}'
+            - uuid: 5ba0bf12a4a34533a01a0638688ad26a
+              expression: 'last(/Template App Elasticsearch Cluster by HTTP Lite/elastic.cluster.active_shards_percent_as_number)<={$ELASTIC_SYNC_DISASTER}'
+              name: 'Elastic cluster sync status is less than {$ELASTIC_SYNC_DISASTER}%'
+              opdata: '{ITEM.LASTVALUE}'
+              priority: DISASTER
+              manual_close: 'YES'
+            - uuid: f7c4eeebf2b242a680721815e9b99e82
+              expression: 'last(/Template App Elasticsearch Cluster by HTTP Lite/elastic.cluster.active_shards_percent_as_number)<={$ELASTIC_SYNC_HIGH}'
+              name: 'Elastic cluster sync status is less than {$ELASTIC_SYNC_HIGH}%'
+              opdata: '{ITEM.LASTVALUE}'
+              priority: HIGH
+              manual_close: 'YES'
+              dependencies:
+                - name: 'Elastic cluster sync status is less than {$ELASTIC_SYNC_DISASTER}%'
+                  expression: 'last(/Template App Elasticsearch Cluster by HTTP Lite/elastic.cluster.active_shards_percent_as_number)<={$ELASTIC_SYNC_DISASTER}'
+            - uuid: 2f69da12c4974a77b1374d615455100e
+              expression: 'last(/Template App Elasticsearch Cluster by HTTP Lite/elastic.cluster.active_shards_percent_as_number)<={$ELASTIC_SYNC_WARN}'
+              name: 'Elastic cluster sync status is less than {$ELASTIC_SYNC_WARN}%'
+              opdata: '{ITEM.LASTVALUE}'
+              priority: WARNING
+              manual_close: 'YES'
+              dependencies:
+                - name: 'Elastic cluster sync status is less than {$ELASTIC_SYNC_AVERAGE}%'
+                  expression: 'last(/Template App Elasticsearch Cluster by HTTP Lite/elastic.cluster.active_shards_percent_as_number)<={$ELASTIC_SYNC_AVERAGE}'
+            - uuid: 65a2bbe5ba29480a94c6d10005f03c4f
+              expression: 'last(/Template App Elasticsearch Cluster by HTTP Lite/elastic.cluster.active_shards_percent_as_number)<={$ELASTIC_SYNC_INFO}'
+              name: 'Elastic cluster sync status less than {$ELASTIC_SYNC_INFO}%'
+              opdata: '{ITEM.LASTVALUE}'
+              priority: INFO
+              manual_close: 'YES'
+              dependencies:
+                - name: 'Elastic cluster sync status is less than {$ELASTIC_SYNC_WARN}%'
+                  expression: 'last(/Template App Elasticsearch Cluster by HTTP Lite/elastic.cluster.active_shards_percent_as_number)<={$ELASTIC_SYNC_WARN}'
+        - uuid: e5e2719190724fe98a59ea7b285606bc
+          name: 'Cluster name'
+          type: DEPENDENT
+          key: elastic.cluster.name
+          delay: '0'
+          history: 2d
+          trends: '0'
+          value_type: CHAR
+          description: 'Name of the cluster'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.cluster_name
+          master_item:
+            key: 'elastic.cluster.status.raw[{$ELASTIC_PROTO},{$ELASTIC_USER},{$ELASTIC_PASSWORD},{$ELASTIC_HOST},{$ELASTIC_PORT}]'
+        - uuid: 560d7126a29d4867af67b9bab414e520
+          name: 'Cluster Number of Data Nodes'
+          type: DEPENDENT
+          key: elastic.cluster.number_of_data_nodes
+          delay: '0'
+          history: 7d
+          description: 'Number of data nodes'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.number_of_data_nodes
+          master_item:
+            key: 'elastic.cluster.status.raw[{$ELASTIC_PROTO},{$ELASTIC_USER},{$ELASTIC_PASSWORD},{$ELASTIC_HOST},{$ELASTIC_PORT}]'
+        - uuid: ec2e88e50ee9400681c6212634579882
+          name: 'Cluster Number of Nodes'
+          type: DEPENDENT
+          key: elastic.cluster.number_of_nodes
+          delay: '0'
+          history: 7d
+          description: 'Number of nodes'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.number_of_nodes
+          master_item:
+            key: 'elastic.cluster.status.raw[{$ELASTIC_PROTO},{$ELASTIC_USER},{$ELASTIC_PASSWORD},{$ELASTIC_HOST},{$ELASTIC_PORT}]'
+        - uuid: 2819c0e20dbf48229b9e2cee7fba7f11
+          name: 'Cluster Number of Pending tasks'
+          type: DEPENDENT
+          key: elastic.cluster.number_of_pending_tasks
+          delay: '0'
+          history: 7d
+          units: '%'
+          description: 'Number of pending tasks'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.number_of_pending_tasks
+          master_item:
+            key: 'elastic.cluster.status.raw[{$ELASTIC_PROTO},{$ELASTIC_USER},{$ELASTIC_PASSWORD},{$ELASTIC_HOST},{$ELASTIC_PORT}]'
+        - uuid: 90dcbbb341164ad6aef00bbb10c2469c
+          name: 'Cluster Status'
+          type: DEPENDENT
+          key: elastic.cluster.status
+          delay: '0'
+          history: 5d
+          trends: '0'
+          value_type: CHAR
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.status
+          master_item:
+            key: 'elastic.cluster.status.raw[{$ELASTIC_PROTO},{$ELASTIC_USER},{$ELASTIC_PASSWORD},{$ELASTIC_HOST},{$ELASTIC_PORT}]'
+        - uuid: 6b579d6fc0854be3a78ddac9bd0a2625
+          name: 'Cluster Status Raw'
+          key: 'elastic.cluster.status.raw[{$ELASTIC_PROTO},{$ELASTIC_USER},{$ELASTIC_PASSWORD},{$ELASTIC_HOST},{$ELASTIC_PORT}]'
+          delay: 3m
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+      macros:
+        - macro: '{$ELASTIC_HOST}'
+          description: 'ElastichSearch Hostname, FQDN or IP'
+        - macro: '{$ELASTIC_PASSWORD}'
+          description: 'ElasticSearch UserPassword'
+        - macro: '{$ELASTIC_PORT}'
+          value: '9200'
+          description: 'ElasticSearch Port'
+        - macro: '{$ELASTIC_PROTO}'
+          value: https
+          description: 'http or https'
+        - macro: '{$ELASTIC_SYNC_AVERAGE}'
+          value: '70'
+          description: 'Percentatge of sync status for trigger less than X'
+        - macro: '{$ELASTIC_SYNC_DISASTER}'
+          value: '30'
+          description: 'Percentatge of sync status for trigger less than X'
+        - macro: '{$ELASTIC_SYNC_HIGH}'
+          value: '60'
+          description: 'Percentatge of sync status for trigger less than X'
+        - macro: '{$ELASTIC_SYNC_INFO}'
+          value: '95'
+          description: 'Percentatge of sync status for trigger less than X'
+        - macro: '{$ELASTIC_SYNC_WARN}'
+          value: '85'
+          description: 'Percentatge of sync status for trigger less than X'
+        - macro: '{$ELASTIC_USER}'
+          description: 'ElasticSearch User'
