@@ -31,8 +31,28 @@ This command will return something like
 
 ### Macros
 
+#### Connection Macros
+
 |MACRO|EXAMPLE|DESCRIPTION|
 |-|-|-|
 |{$ELASTIC_HOST}|siem.mydomain.com|Hostname, FQDN or IP of your server|
 |{$ELASTIC_PORT}|9200|Port of ElasticSearch server|
 |{$ELASTIC_PROTO}|https|Protocol (http, https) of Elastic server|
+|{$ELASTIC_USER}|username|Username of Elastic server|
+|{$ELASTIC_PASSWORD}|myPassword!231|Password of Elastic server|
+
+#### Trigger Macros
+
+Macros for Triggers with percentage of cluster sync
+
+|MACRO|VALUE|DESCRIPTION|
+|-|-|-|
+|{$ELASTIC_SYNC_DISASTER}|30|Trigger info when active_shards_percent_as_number is lower than 30%|
+|{$ELASTIC_SYNC_HIGH}|60|Trigger info when active_shards_percent_as_number is lower than 60%|
+|{$ELASTIC_SYNC_AVERAGE}|70|Trigger info when active_shards_percent_as_number is lower than 70%|
+|{$ELASTIC_SYNC_WARN}|85|Trigger info when active_shards_percent_as_number is lower than 85%|
+|{$ELASTIC_SYNC_INFO}|95|Trigger info when active_shards_percent_as_number is lower than 95%|
+
+### Triggers
+
+The triggers have dependency between them. For example, INFO trigger is hide when trigger WARNING appears
