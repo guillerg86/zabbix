@@ -32,7 +32,7 @@ This command will return something like
 ### Macros
 
 |MACRO|EXAMPLE|DESCRIPTION|
-|-|-|
+|-|-|-|
 |{$ELASTIC_HOST}|siem.mydomain.com|Hostname, FQDN or IP of your server|
 |{$ELASTIC_PORT}|9200|Port of ElasticSearch server|
 |{$ELASTIC_PROTO}|https|Protocol (http, https) of Elastic server|
