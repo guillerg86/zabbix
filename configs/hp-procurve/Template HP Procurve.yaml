@@ -50,41 +50,27 @@ zabbix_export:
                 value: '{$NET.IF.IFADMINSTATUS.NOT_MATCHES}'
                 operator: NOT_MATCHES_REGEX
                 formulaid: B
-              - macro: '{#IFALIAS}'
-                value: '{$NET.IF.IFALIAS.MATCHES}'
-                formulaid: C
-              - macro: '{#IFALIAS}'
-                value: '{$NET.IF.IFALIAS.NOT_MATCHES}'
-                operator: NOT_MATCHES_REGEX
-                formulaid: D
               - macro: '{#IFDESCR}'
                 value: '{$NET.IF.IFDESCR.MATCHES}'
-                formulaid: E
+                formulaid: C
               - macro: '{#IFDESCR}'
                 value: '{$NET.IF.IFDESCR.NOT_MATCHES}'
                 operator: NOT_MATCHES_REGEX
-                formulaid: F
-              - macro: '{#IFNAME}'
-                value: '{$NET.IF.IFNAME.MATCHES}'
-                formulaid: G
-              - macro: '{#IFNAME}'
-                value: '{$NET.IF.IFNAME.NOT_MATCHES}'
-                operator: NOT_MATCHES_REGEX
-                formulaid: H
+                formulaid: D
               - macro: '{#IFOPERSTATUS}'
                 value: '{$NET.IF.IFOPERSTATUS.MATCHES}'
-                formulaid: I
+                formulaid: E
               - macro: '{#IFOPERSTATUS}'
                 value: '{$NET.IF.IFOPERSTATUS.NOT_MATCHES}'
                 operator: NOT_MATCHES_REGEX
-                formulaid: J
+                formulaid: F
               - macro: '{#IFTYPE}'
                 value: '{$NET.IF.IFTYPE.MATCHES}'
-                formulaid: K
+                formulaid: G
               - macro: '{#IFTYPE}'
                 value: '{$NET.IF.IFTYPE.NOT_MATCHES}'
                 operator: NOT_MATCHES_REGEX
-                formulaid: L
+                formulaid: H
           description: 'Discovering interfaces from IF-MIB.'
           item_prototypes:
             - uuid: 1503fc04bd214744bb61fe8179de425e
@@ -107,7 +93,7 @@ zabbix_export:
                     - ''
               tags:
                 - tag: Application
-                  value: 'Interface {#IFNAME}({#IFALIAS})'
+                  value: 'Interface {#IFDESCR}'
             - uuid: 8202c673cd9b410c9551e336eba620d9
               name: 'Interface {#IFDESCR}({#IFINDEX}): Inbound packets with errors'
               type: SNMP_AGENT
@@ -124,7 +110,7 @@ zabbix_export:
                     - ''
               tags:
                 - tag: Application
-                  value: 'Interface {#IFNAME}({#IFALIAS})'
+                  value: 'Interface {#IFDESCR}'
             - uuid: bb9fd0a573a0473c88a20e15211ab003
               name: 'Interface {#IFDESCR}({#IFINDEX}): Bits received'
               type: SNMP_AGENT
@@ -145,7 +131,7 @@ zabbix_export:
                     - '8'
               tags:
                 - tag: Application
-                  value: 'Interface {#IFNAME}({#IFALIAS})'
+                  value: 'Interface {#IFDESCR}'
             - uuid: 5a07aa385a4641f28573c74fb5602758
               name: 'Interface {#IFDESCR}({#IFINDEX}): Outbound packets discarded'
               type: SNMP_AGENT
@@ -166,7 +152,7 @@ zabbix_export:
                     - ''
               tags:
                 - tag: Application
-                  value: 'Interface {#IFNAME}({#IFALIAS})'
+                  value: 'Interface {#IFDESCR}'
             - uuid: 7c21db48d5a44ceab57ccd71a6ce3bfa
               name: 'Interface {#IFDESCR}({#IFINDEX}): Outbound packets with errors'
               type: SNMP_AGENT
@@ -183,28 +169,24 @@ zabbix_export:
                     - ''
               tags:
                 - tag: Application
-                  value: 'Interface {#IFNAME}({#IFALIAS})'
+                  value: 'Interface {#IFDESCR}'
             - uuid: 9023027d9d104ef5bdf44ccdeee0200c
               name: 'Interface {#IFDESCR}({#IFINDEX}): Mtu'
               type: SNMP_AGENT
-              snmp_oid: '.1.3.6.1.2.1.2.2.1.4..{#SNMPINDEX}'
+              snmp_oid: '.1.3.6.1.2.1.2.2.1.4.{#SNMPINDEX}'
               key: 'net.if.out[ifMtu.{#SNMPINDEX}]'
               delay: 10m
               history: 7d
-              units: bps
               description: |
                 MIB: IF-MIB
                 MTU configured for port
               preprocessing:
-                - type: CHANGE_PER_SECOND
+                - type: DISCARD_UNCHANGED_HEARTBEAT
                   parameters:
-                    - ''
-                - type: MULTIPLIER
-                  parameters:
-                    - '8'
+                    - 1h
               tags:
                 - tag: Application
-                  value: 'Interface {#IFNAME}({#IFALIAS})'
+                  value: 'Interface {#IFDESCR}'
             - uuid: 5a6e78c750644ec28b1e858634576764
               name: 'Interface {#IFDESCR}({#IFINDEX}): Bits sent'
               type: SNMP_AGENT
@@ -225,7 +207,7 @@ zabbix_export:
                     - '8'
               tags:
                 - tag: Application
-                  value: 'Interface {#IFNAME}({#IFALIAS})'
+                  value: 'Interface {#IFDESCR}'
             - uuid: 5798abc3e7a242d093adfa8ada5f05cf
               name: 'Interface {#IFDESCR}({#IFINDEX}): Speed'
               type: SNMP_AGENT
@@ -247,7 +229,7 @@ zabbix_export:
                     - 1h
               tags:
                 - tag: Application
-                  value: 'Interface {#IFNAME}({#IFALIAS})'
+                  value: 'Interface {#IFDESCR}'
             - uuid: 377375b436c4476c83730e32125df9ca
               name: 'Interface {#IFDESCR}({#IFINDEX}): Admin status'
               type: SNMP_AGENT
@@ -268,7 +250,7 @@ zabbix_export:
                 name: 'IF-MIB::ifOperStatus'
               tags:
                 - tag: Application
-                  value: 'Interface {#IFNAME}({#IFALIAS})'
+                  value: 'Interface {#IFDESCR}'
             - uuid: ea66a45a77dd4686981c114e427aae2a
               name: 'Interface {#IFDESCR}({#IFINDEX}): Operational status'
               type: SNMP_AGENT
@@ -289,7 +271,7 @@ zabbix_export:
                 name: 'IF-MIB::ifOperStatus'
               tags:
                 - tag: Application
-                  value: 'Interface {#IFNAME}({#IFALIAS})'
+                  value: 'Interface {#IFDESCR}'
               trigger_prototypes:
                 - uuid: 2c4733ec8cb94bafa41a365c114d95e1
                   expression: '{$IFCONTROL:"{#IFINDEX"}=1 and (last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}])=2 and (last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}],#1)<>last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}],#2))=1)'
@@ -329,7 +311,7 @@ zabbix_export:
                     - 1d
               tags:
                 - tag: Application
-                  value: 'Interface {#IFNAME}({#IFALIAS})'
+                  value: 'Interface {#IFDESCR}'
           trigger_prototypes:
             - uuid: aeb96cd5dfe4494a8692ff0f39d94243
               expression: |
@@ -400,7 +382,7 @@ zabbix_export:
                   recovery_expression: 'last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2 or {$IFCONTROL:"{#IFINDEX}"}=0'
           graph_prototypes:
             - uuid: b2255aadce85432388dc6fbcb3c7432c
-              name: 'Interface {#IFDESCR}({#IFINDEX}): Network traffic'
+              name: 'Interface {#IFDESCR}: Network traffic'
               graph_items:
                 - drawtype: GRADIENT_LINE
                   color: 1A7C11
@@ -450,19 +432,10 @@ zabbix_export:
         - macro: '{$NET.IF.IFADMINSTATUS.NOT_MATCHES}'
           value: ^2$
           description: 'Ignore down(2) administrative status'
-        - macro: '{$NET.IF.IFALIAS.MATCHES}'
-          value: '.*'
-        - macro: '{$NET.IF.IFALIAS.NOT_MATCHES}'
-          value: CHANGE_IF_NEEDED
         - macro: '{$NET.IF.IFDESCR.MATCHES}'
           value: '.*'
         - macro: '{$NET.IF.IFDESCR.NOT_MATCHES}'
           value: CHANGE_IF_NEEDED
-        - macro: '{$NET.IF.IFNAME.MATCHES}'
-          value: '^.*$'
-        - macro: '{$NET.IF.IFNAME.NOT_MATCHES}'
-          value: '(^Software Loopback Interface|^NULL[0-9.]*$|^[Ll]o[0-9.]*$|^[Ss]ystem$|^Nu[0-9.]*$|^veth[0-9a-z]+$|docker[0-9]+|br-[a-z0-9]{12})'
-          description: 'Filter out loopbacks, nulls, docker veth links and docker0 bridge by default'
         - macro: '{$NET.IF.IFOPERSTATUS.MATCHES}'
           value: '^.*$'
         - macro: '{$NET.IF.IFOPERSTATUS.NOT_MATCHES}'
@@ -488,7 +461,7 @@ zabbix_export:
                       name: graphid
                       value:
                         host: 'Template Module Interfaces SNMP HP Procurve'
-                        name: 'Interface {#IFDESCR}({#IFINDEX}): Network traffic'
+                        name: 'Interface {#IFDESCR}: Network traffic'
       valuemaps:
         - uuid: d594482fe3b14dc992bf5d7f1795133a
           name: 'IF-MIB::ifOperStatus'
