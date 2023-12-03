@@ -116,7 +116,6 @@ zabbix_export:
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.2.1.2.2.1.10.{#SNMPINDEX}'
               key: 'net.if.in[ifInOctets.{#SNMPINDEX}]'
-              delay: 3m
               history: 7d
               units: bps
               description: |
@@ -183,7 +182,7 @@ zabbix_export:
               preprocessing:
                 - type: DISCARD_UNCHANGED_HEARTBEAT
                   parameters:
-                    - 1h
+                    - 6h
               tags:
                 - tag: Application
                   value: 'Interface {#IFDESCR}'
@@ -192,7 +191,6 @@ zabbix_export:
               type: SNMP_AGENT
               snmp_oid: '.1.3.6.1.2.1.2.2.1.16.{#SNMPINDEX}'
               key: 'net.if.out[ifOutOctets.{#SNMPINDEX}]'
-              delay: 3m
               history: 7d
               units: bps
               description: |
@@ -213,7 +211,6 @@ zabbix_export:
               type: SNMP_AGENT
               snmp_oid: '.1.3.6.1.2.1.2.2.1.5.{#SNMPINDEX}'
               key: 'net.if.speed[ifSpeed.{#SNMPINDEX}]'
-              delay: 5m
               history: 7d
               trends: '0'
               units: bps
@@ -221,12 +218,9 @@ zabbix_export:
                 MIB: IF-MIB
                 An estimate of the interface's current bandwidth in units of 1,000,000 bits per second. If this object reports a value of `n' then the speed of the interface is somewhere in the range of `n-500,000' to`n+499,999'.  For interfaces which do not vary in bandwidth or for those where no accurate estimation can be made, this object should contain the nominal bandwidth. For a sub-layer which has no concept of bandwidth, this object should be zero.
               preprocessing:
-                - type: MULTIPLIER
-                  parameters:
-                    - '1000000'
                 - type: DISCARD_UNCHANGED_HEARTBEAT
                   parameters:
-                    - 1h
+                    - 6h
               tags:
                 - tag: Application
                   value: 'Interface {#IFDESCR}'
@@ -248,6 +242,10 @@ zabbix_export:
                 - It should remain in the notPresent(6) state if the interface has missing(typically, hardware) components.
               valuemap:
                 name: 'IF-MIB::ifOperStatus'
+              preprocessing:
+                - type: DISCARD_UNCHANGED_HEARTBEAT
+                  parameters:
+                    - 6h
               tags:
                 - tag: Application
                   value: 'Interface {#IFDESCR}'
@@ -269,27 +267,13 @@ zabbix_export:
                 - It should remain in the notPresent(6) state if the interface has missing(typically, hardware) components.
               valuemap:
                 name: 'IF-MIB::ifOperStatus'
+              preprocessing:
+                - type: DISCARD_UNCHANGED_HEARTBEAT
+                  parameters:
+                    - 6h
               tags:
                 - tag: Application
                   value: 'Interface {#IFDESCR}'
-              trigger_prototypes:
-                - uuid: 2c4733ec8cb94bafa41a365c114d95e1
-                  expression: '{$IFCONTROL:"{#IFINDEX"}=1 and (last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}])=2 and (last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}],#1)<>last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}],#2))=1)'
-                  recovery_mode: RECOVERY_EXPRESSION
-                  recovery_expression: 'last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2 or {$IFCONTROL:"{#IFINDEX}"}=0'
-                  name: 'Interface {#IFDESCR}({#IFINDEX}): Link down'
-                  opdata: 'Current state: {ITEM.LASTVALUE1}'
-                  status: DISABLED
-                  discover: NO_DISCOVER
-                  priority: AVERAGE
-                  description: |
-                    This trigger expression works as follows:
-                    1. Can be triggered if operations status is down.
-                    2. {$IFCONTROL:"{#IFNAME}"}=1 - user can redefine Context macro to value - 0. That marks this interface as not important. No new trigger will be fired if this interface is down.
-                    3. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only if operational status was up(1) sometime before. (So, do not fire 'ethernal off' interfaces.)
-                    
-                    WARNING: if closed manually - won't fire again on next poll, because of .diff.
-                  manual_close: 'YES'
             - uuid: 993471654ebe4014b267ab0eb2316ee1
               name: 'Interface {#IFDESCR}({#IFINDEX}): Interface type'
               type: SNMP_AGENT
@@ -338,9 +322,8 @@ zabbix_export:
               description: 'This Ethernet connection has transitioned down from its known maximum speed. This might be a sign of autonegotiation issues. Ack to close.'
               manual_close: 'YES'
               dependencies:
-                - name: 'Interface {#IFDESCR}({#IFINDEX}): Link down'
-                  expression: '{$IFCONTROL:"{#IFINDEX"}=1 and (last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}])=2 and (last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}],#1)<>last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}],#2))=1)'
-                  recovery_expression: 'last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2 or {$IFCONTROL:"{#IFINDEX}"}=0'
+                - name: 'Interface {#IFDESCR}: Link down'
+                  expression: 'last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}])<>1 and last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifAdminStatus.{#SNMPINDEX}])=1'
             - uuid: 56cd2fe007e646508f1e2c0f317267b7
               expression: |
                 (avg(/Template Module Interfaces SNMP HP Procurve/net.if.in[ifInOctets.{#SNMPINDEX}],15m)>({$IF.UTIL.MAX:"{#IFINDEX}"}/100)*last(/Template Module Interfaces SNMP HP Procurve/net.if.speed[ifSpeed.{#SNMPINDEX}]) or
@@ -358,9 +341,8 @@ zabbix_export:
               description: 'The network interface utilization is close to its estimated maximum bandwidth.'
               manual_close: 'YES'
               dependencies:
-                - name: 'Interface {#IFDESCR}({#IFINDEX}): Link down'
-                  expression: '{$IFCONTROL:"{#IFINDEX"}=1 and (last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}])=2 and (last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}],#1)<>last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}],#2))=1)'
-                  recovery_expression: 'last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2 or {$IFCONTROL:"{#IFINDEX}"}=0'
+                - name: 'Interface {#IFDESCR}: Link down'
+                  expression: 'last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}])<>1 and last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifAdminStatus.{#SNMPINDEX}])=1'
             - uuid: 1939f82492de4c1dba383e0537a29966
               expression: |
                 min(/Template Module Interfaces SNMP HP Procurve/net.if.in.errors[ifInErrors.{#SNMPINDEX}],5m)>{$IF.ERRORS.WARN:"{#IFINDEX}"}
@@ -377,9 +359,21 @@ zabbix_export:
               description: 'Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold'
               manual_close: 'YES'
               dependencies:
-                - name: 'Interface {#IFDESCR}({#IFINDEX}): Link down'
-                  expression: '{$IFCONTROL:"{#IFINDEX"}=1 and (last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}])=2 and (last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}],#1)<>last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}],#2))=1)'
-                  recovery_expression: 'last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2 or {$IFCONTROL:"{#IFINDEX}"}=0'
+                - name: 'Interface {#IFDESCR}: Link down'
+                  expression: 'last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}])<>1 and last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifAdminStatus.{#SNMPINDEX}])=1'
+            - uuid: 2c4733ec8cb94bafa41a365c114d95e1
+              expression: 'last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifOperStatus.{#SNMPINDEX}])<>1 and last(/Template Module Interfaces SNMP HP Procurve/net.if.status[ifAdminStatus.{#SNMPINDEX}])=1'
+              name: 'Interface {#IFDESCR}: Link down'
+              opdata: 'Current state: {ITEM.LASTVALUE1}'
+              priority: AVERAGE
+              description: |
+                This trigger expression works as follows:
+                1. Can be triggered if operations status is down.
+                2. {$IFCONTROL:"{#IFNAME}"}=1 - user can redefine Context macro to value - 0. That marks this interface as not important. No new trigger will be fired if this interface is down.
+                3. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only if operational status was up(1) sometime before. (So, do not fire 'ethernal off' interfaces.)
+                
+                WARNING: if closed manually - won't fire again on next poll, because of .diff.
+              manual_close: 'YES'
           graph_prototypes:
             - uuid: b2255aadce85432388dc6fbcb3c7432c
               name: 'Interface {#IFDESCR}: Network traffic'
