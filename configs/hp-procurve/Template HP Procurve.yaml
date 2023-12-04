@@ -71,6 +71,7 @@ zabbix_export:
                 value: '{$NET.IF.IFTYPE.NOT_MATCHES}'
                 operator: NOT_MATCHES_REGEX
                 formulaid: H
+          lifetime: 3h
           description: 'Discovering interfaces from IF-MIB.'
           item_prototypes:
             - uuid: 1503fc04bd214744bb61fe8179de425e
@@ -241,7 +242,7 @@ zabbix_export:
                 - It should remain in the down(2) state if and only if there is a fault that prevents it from going to the up(1) state
                 - It should remain in the notPresent(6) state if the interface has missing(typically, hardware) components.
               valuemap:
-                name: 'IF-MIB::ifOperStatus'
+                name: 'IF-MIB::ifAdminStatus'
               preprocessing:
                 - type: DISCARD_UNCHANGED_HEARTBEAT
                   parameters:
@@ -424,7 +425,7 @@ zabbix_export:
           value: '^.*'
           description: 'Ignore notPresent(6)'
         - macro: '{$NET.IF.IFADMINSTATUS.NOT_MATCHES}'
-          value: ^2$
+          value: ^0$
           description: 'Ignore down(2) administrative status'
         - macro: '{$NET.IF.IFDESCR.MATCHES}'
           value: '.*'
@@ -457,6 +458,13 @@ zabbix_export:
                         host: 'Template Module Interfaces SNMP HP Procurve'
                         name: 'Interface {#IFDESCR}: Network traffic'
       valuemaps:
+        - uuid: cbbd62eb57bc477984ee43de2271c5f2
+          name: 'IF-MIB::ifAdminStatus'
+          mappings:
+            - value: '0'
+              newvalue: down
+            - value: '1'
+              newvalue: up
         - uuid: d594482fe3b14dc992bf5d7f1795133a
           name: 'IF-MIB::ifOperStatus'
           mappings:
