@@ -4,15 +4,14 @@ This template is the same as Template OS FreeBSD but with a new item in Discover
 
 - Interface Operational Status
 
-You need to add this UserParameter to agents
+You need to add this UserParameter to agents (remember reboot the agent after add UserParameter)
 
 ```
 UserParameter=net.if.operstatus[*],ifconfig $1 | grep status | cut -d ':' -f 2 | sed 's/ //g'
 ```
 
-And reboot the agent.
-
 Also all discovered interfaces has a new application tag for group all info of that interface in one tag.
 
-
+```
 Application: Interface {#IFNAME}
+```` 
