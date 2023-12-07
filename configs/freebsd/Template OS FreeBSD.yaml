@@ -417,6 +417,12 @@ zabbix_export:
                   value: 'Interface {#IFNAME}'
                 - tag: Application
                   value: 'Network interfaces'
+              trigger_prototypes:
+                - uuid: 9a8dc7050ea4487483d9ddc45f5ab290
+                  expression: 'last(/Template OS FreeBSD/net.if.operstatus[{#IFNAME}])=0 and change(/Template OS FreeBSD/net.if.operstatus[{#IFNAME}])<>0'
+                  name: 'Interface {#IFNAME} Link Down'
+                  priority: AVERAGE
+                  manual_close: 'YES'
             - uuid: e36f51e83fef4f1d8004e0342ce59635
               name: 'Outgoing network errors on {#IFNAME}'
               key: 'net.if.out[{#IFNAME},errors]'
