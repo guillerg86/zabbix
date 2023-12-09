@@ -1,0 +1,374 @@
+zabbix_export:
+  version: '6.4'
+  template_groups:
+    - uuid: 7df96b18c230490a9a0a9e2307226338
+      name: Templates
+    - uuid: a571c0d144b14fd4a87a9d9b2aa9fcd6
+      name: Templates/Applications
+  host_groups:
+    - uuid: a571c0d144b14fd4a87a9d9b2aa9fcd6
+      name: Templates/Applications
+  templates:
+    - uuid: e03aecea0a694e65b6daa4646dcfedeb
+      template: 'Template XCP-NG 8.2'
+      name: 'Template XCP-NG 8.2'
+      description: |
+        Author: Guille Rodriguez
+        Website: https://github.com/guillerg86
+      groups:
+        - name: Templates
+      discovery_rules:
+        - uuid: 93ccb2c13ee34745bbd01591df55e6e2
+          name: 'Discover VMs'
+          key: xcpng.vms.discovery
+          delay: 1h
+          lifetime: 1h
+          host_prototypes:
+            - uuid: f092540d117e41dd8ff13b0d4286375d
+              host: '{#VM.UUID}'
+              name: '{#VM.NAME} VM'
+              group_links:
+                - group:
+                    name: Templates/Applications
+              templates:
+                - name: 'Template XCP-NG 8.2 Guest VM'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.vmlist
+    - uuid: e0019a6bb16a48708d49320a4115c4e1
+      template: 'Template XCP-NG 8.2 Guest VM'
+      name: 'Template XCP-NG 8.2 Guest VM'
+      description: |
+        Author: Guille Rodriguez
+        Website: https://github.com/guillerg86
+      templates:
+        - name: 'Template VM VMware macros'
+      groups:
+        - name: Templates/Applications
+      items:
+        - uuid: 204eeb42b0f44cff90b86ff7a6eff99a
+          name: 'XCPNG: Auto poweron'
+          key: 'xcpng.vms.details[{HOST.HOST},"auto-poweron"]'
+          delay: 1h
+          history: 7d
+          description: 'The current power state of the virtual machine.'
+          valuemap:
+            name: 'VM Enabled Disabled'
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  var newvalue;
+                  switch(value) {
+                  	case "false":
+                  		newvalue = 0;
+                  		break;
+                  	case "true":
+                  		newvalue = 1;
+                  		break;
+                  	default:
+                  		newvalue = value;
+                  	}
+                  return newvalue;
+          tags:
+            - tag: Application
+              value: XCP-NG
+        - uuid: 81a30c3d0f4445b782422653e8ecf0ee
+          name: 'XCPNG: HVM'
+          key: 'xcpng.vms.details[{HOST.HOST},"hvm"]'
+          delay: 1h
+          history: 7d
+          description: 'Virtualization Mode (HVM, PV)'
+          valuemap:
+            name: 'VM Enabled Disabled'
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  var newvalue;
+                  switch(value) {
+                  	case "false":
+                  		newvalue = 0;
+                  		break;
+                  	case "true":
+                  		newvalue = 1;
+                  		break;
+                  	default:
+                  		newvalue = value;
+                  	}
+                  return newvalue;
+          tags:
+            - tag: Application
+              value: XCP-NG
+        - uuid: 88515e9a058949c9b136fc23b26946bf
+          name: 'XCPNG: Memory actual'
+          key: 'xcpng.vms.details[{HOST.HOST},"memory-actual"]'
+          history: 7d
+          units: B
+          tags:
+            - tag: Application
+              value: XCP-NG
+        - uuid: 9af0005cdd2d47d293189ebea835a908
+          name: 'XCPNG: Memory dynamic max'
+          key: 'xcpng.vms.details[{HOST.HOST},"memory-dynamic-max"]'
+          delay: 10m
+          history: 7d
+          units: B
+          tags:
+            - tag: Application
+              value: XCP-NG
+        - uuid: 761ddee5eecd464daa9d93e2827f9d14
+          name: 'XCPNG: Memory dynamic min'
+          key: 'xcpng.vms.details[{HOST.HOST},"memory-dynamic-min"]'
+          delay: 10m
+          history: 7d
+          units: B
+          tags:
+            - tag: Application
+              value: XCP-NG
+        - uuid: 3569b16112b04496933f211159d2b0ca
+          name: 'XCPNG: Memory overhead'
+          key: 'xcpng.vms.details[{HOST.HOST},"memory-overhead"]'
+          history: 7d
+          units: B
+          tags:
+            - tag: Application
+              value: XCP-NG
+        - uuid: 064ecc8f4efb4fb18a6b85f6c926ab5c
+          name: 'XCPNG: Memory static max'
+          key: 'xcpng.vms.details[{HOST.HOST},"memory-static-max"]'
+          delay: 10m
+          history: 7d
+          units: B
+          tags:
+            - tag: Application
+              value: XCP-NG
+        - uuid: 10156f499c7d47bd9d9f6c771f00a9ad
+          name: 'XCPNG: Memory static min'
+          key: 'xcpng.vms.details[{HOST.HOST},"memory-static-min"]'
+          delay: 10m
+          history: 7d
+          units: B
+          tags:
+            - tag: Application
+              value: XCP-NG
+        - uuid: 306661cdb4ac4a9580e75718764e27b3
+          name: 'XCPNG: Memory target'
+          key: 'xcpng.vms.details[{HOST.HOST},"memory-target"]'
+          delay: 10m
+          history: 7d
+          units: B
+          tags:
+            - tag: Application
+              value: XCP-NG
+        - uuid: 6bdccf21936c44a8989c3734e5b2dbbf
+          name: 'XCPNG: Power state'
+          key: 'xcpng.vms.details[{HOST.HOST},"power-state"]'
+          history: 7d
+          description: 'The current power state of the virtual machine.'
+          valuemap:
+            name: VirtualMachinePowerState
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  var newvalue;
+                  switch(value) {
+                  	case "halted":
+                  		newvalue = 0;
+                  		break;
+                  	case "running":
+                  		newvalue = 1;
+                  		break;
+                  	default:
+                  		newvalue = value;
+                  	}
+                  return newvalue;
+          tags:
+            - tag: Application
+              value: XCP-NG
+        - uuid: a3c55fdadc524a62abc2ca33f3e63c94
+          name: 'XCPNG: Requires reboot'
+          key: 'xcpng.vms.details[{HOST.HOST},"requires-reboot"]'
+          delay: 10m
+          history: 7d
+          description: 'The current power state of the virtual machine.'
+          valuemap:
+            name: 'VM yes no'
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  var newvalue;
+                  switch(value) {
+                  	case "false":
+                  		newvalue = 0;
+                  		break;
+                  	case "true":
+                  		newvalue = 1;
+                  		break;
+                  	default:
+                  		newvalue = value;
+                  	}
+                  return newvalue;
+          tags:
+            - tag: Application
+              value: XCP-NG
+          triggers:
+            - uuid: 3928c4c3833140de8482275c613f57af
+              expression: 'last(/Template XCP-NG 8.2 Guest VM/xcpng.vms.details[{HOST.HOST},"requires-reboot"])=1'
+              name: 'VM requires reboot'
+              priority: INFO
+              description: 'Hypervisor has flagged this VM as requires reboot'
+              manual_close: 'YES'
+        - uuid: 7f82a124efa44a62b209defd32a0b76b
+          name: 'XCPNG: Start-time'
+          key: 'xcpng.vms.details[{HOST.HOST},"start-time"]'
+          history: 7d
+          value_type: FLOAT
+          units: unixtime
+          description: 'Datetime when VM was poweredon'
+          tags:
+            - tag: Application
+              value: XCP-NG
+        - uuid: 6ad118f2e8354aba81ffb80da5d6dc2c
+          name: 'XCPNG: Uptime'
+          key: 'xcpng.vms.details[{HOST.HOST},"uptime"]'
+          delay: 3m
+          history: 7d
+          value_type: FLOAT
+          units: s
+          description: 'Time since VM was poweredon'
+          tags:
+            - tag: Application
+              value: XCP-NG
+          triggers:
+            - uuid: 9e8477cec959439887ed89600b50fc2c
+              expression: 'last(/Template XCP-NG 8.2 Guest VM/xcpng.vms.details[{HOST.HOST},"uptime"])>5s and last(/Template XCP-NG 8.2 Guest VM/xcpng.vms.details[{HOST.HOST},"uptime"])<10m'
+              name: 'VM has been restarted (uptime < 10m)'
+              priority: WARNING
+        - uuid: 884ee37ca90d44f3a2cdac14a3483304
+          name: 'XCPNG: Number of virtual CPUs'
+          key: 'xcpng.vms.details[{HOST.HOST},"VCPUs-number"]'
+          delay: 1h
+          history: 7d
+          description: 'Number of VCPUs'
+          tags:
+            - tag: Application
+              value: XCP-NG
+        - uuid: 2f14948041fd496eb959f5964ce65247
+          name: 'XCPNG: CPU Usage'
+          key: 'xcpng.vms.details[{HOST.HOST},"VCPUs-utilisation"]'
+          delay: 5m
+          history: 7d
+          value_type: FLOAT
+          description: 'Utilisation of VCPU'
+          tags:
+            - tag: Application
+              value: XCP-NG
+      discovery_rules:
+        - uuid: 5dfc20cca5c545529a674de175c372af
+          name: 'Network device discovery'
+          key: 'xcpng.vms.vif.discovery[{HOST.HOST}]'
+          delay: 1h
+          lifetime: 7d
+          description: 'Discovery of all network devices.'
+          item_prototypes:
+            - uuid: 98e18cb04cb74db09ba42d03e5ab7ba2
+              name: 'VIF {#VM.VIF.UUID}: KBytes received'
+              key: 'xcpng.vms.vif.details[{#VM.VIF.UUID},"vif-kbytes-rcvd"]'
+              history: 7d
+              value_type: FLOAT
+              units: K
+              tags:
+                - tag: Application
+                  value: Network
+                - tag: Network
+                  value: '{#VM.VIF.UUID}'
+            - uuid: c33d0915dd034b1ba4251fa4b2155304
+              name: 'VIF {#VM.VIF.UUID}: KBytes transmitted'
+              key: 'xcpng.vms.vif.details[{#VM.VIF.UUID},"vif-kbytes-sent"]'
+              history: 7d
+              value_type: FLOAT
+              units: K
+              description: 'Interface MAC Address'
+              tags:
+                - tag: Application
+                  value: Network
+                - tag: Network
+                  value: '{#VM.VIF.UUID}'
+            - uuid: ab0ff852407143d384d46d2a0c6675da
+              name: 'VIF {#VM.VIF.UUID}: MAC'
+              key: 'xcpng.vms.vif.details[{#VM.VIF.UUID},"vif-mac-addr"]'
+              delay: 1h
+              history: 7d
+              trends: '0'
+              value_type: CHAR
+              description: 'Interface MAC Address'
+              tags:
+                - tag: Application
+                  value: Network
+                - tag: Network
+                  value: '{#VM.VIF.UUID}'
+            - uuid: 7d80b0c79abb4b69b556ff6d38e88f4f
+              name: 'VIF {#VM.VIF.UUID}: MTU'
+              key: 'xcpng.vms.vif.details[{#VM.VIF.UUID},"vif-mtu"]'
+              delay: 1h
+              history: 7d
+              trends: '0'
+              value_type: CHAR
+              description: 'Interface MTU'
+              tags:
+                - tag: Application
+                  value: Network
+                - tag: Network
+                  value: '{#VM.VIF.UUID}'
+            - uuid: 9cf9897489ff4a1a9e7cb24a32c98066
+              name: 'VIF {#VM.VIF.UUID}: Network / Vlan Name'
+              key: 'xcpng.vms.vif.details[{#VM.VIF.UUID},"vif-network-name"]'
+              delay: 1h
+              history: 7d
+              trends: '0'
+              value_type: CHAR
+              description: 'Network name or VLAN name where Interface is connected.'
+              tags:
+                - tag: Application
+                  value: Network
+                - tag: Network
+                  value: '{#VM.VIF.UUID}'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.vif_list
+      valuemaps:
+        - uuid: 519df291854946dfa679a58d2ed3c00a
+          name: VirtualMachinePowerState
+          mappings:
+            - value: '0'
+              newvalue: poweredOff
+            - value: '1'
+              newvalue: poweredOn
+            - value: '2'
+              newvalue: suspended
+        - uuid: 9fa7cce0a0a940079ad376f0698040cf
+          name: 'VM Enabled Disabled'
+          mappings:
+            - value: '0'
+              newvalue: disabled
+            - value: '1'
+              newvalue: enabled
+        - uuid: 259df6dd2b66433493ae25247699a27a
+          name: 'VM yes no'
+          mappings:
+            - value: '0'
+              newvalue: 'no'
+            - value: '1'
+              newvalue: 'yes'
+  triggers:
+    - uuid: bf56ae37cb7d4b7682548eee9083c3e6
+      expression: 'last(/Template XCP-NG 8.2 Guest VM/xcpng.vms.details[{HOST.HOST},"power-state"])=0 and last(/Template XCP-NG 8.2 Guest VM/xcpng.vms.details[{HOST.HOST},"auto-poweron"])=1'
+      name: 'VM is powered off'
+      priority: HIGH
+      description: 'VM is powered off but auto poweron is enabled'
+      manual_close: 'YES'
