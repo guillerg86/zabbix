@@ -1,0 +1,678 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>6.4</version>
+    <template_groups>
+        <template_group>
+            <uuid>7df96b18c230490a9a0a9e2307226338</uuid>
+            <name>Templates</name>
+        </template_group>
+        <template_group>
+            <uuid>a571c0d144b14fd4a87a9d9b2aa9fcd6</uuid>
+            <name>Templates/Applications</name>
+        </template_group>
+    </template_groups>
+    <host_groups>
+        <host_group>
+            <uuid>a571c0d144b14fd4a87a9d9b2aa9fcd6</uuid>
+            <name>Templates/Applications</name>
+        </host_group>
+    </host_groups>
+    <templates>
+        <template>
+            <uuid>e03aecea0a694e65b6daa4646dcfedeb</uuid>
+            <template>Template XCP-NG 8.2</template>
+            <name>Template XCP-NG 8.2</name>
+            <description>Author: Guille Rodriguez
+Website: https://github.com/guillerg86</description>
+            <groups>
+                <group>
+                    <name>Templates</name>
+                </group>
+            </groups>
+            <discovery_rules>
+                <discovery_rule>
+                    <uuid>93ccb2c13ee34745bbd01591df55e6e2</uuid>
+                    <name>Discover VMs</name>
+                    <key>xcpng.vms.discovery</key>
+                    <delay>20m</delay>
+                    <lifetime>1h</lifetime>
+                    <host_prototypes>
+                        <host_prototype>
+                            <uuid>f092540d117e41dd8ff13b0d4286375d</uuid>
+                            <host>{#VM.UUID}</host>
+                            <name>{#VM.NAME} VM</name>
+                            <group_links>
+                                <group_link>
+                                    <group>
+                                        <name>Templates/Applications</name>
+                                    </group>
+                                </group_link>
+                            </group_links>
+                            <templates>
+                                <template>
+                                    <name>Template XCP-NG 8.2 Guest VM</name>
+                                </template>
+                            </templates>
+                        </host_prototype>
+                    </host_prototypes>
+                    <preprocessing>
+                        <step>
+                            <type>JSONPATH</type>
+                            <parameters>
+                                <parameter>$.vmlist</parameter>
+                            </parameters>
+                        </step>
+                    </preprocessing>
+                </discovery_rule>
+            </discovery_rules>
+        </template>
+        <template>
+            <uuid>e0019a6bb16a48708d49320a4115c4e1</uuid>
+            <template>Template XCP-NG 8.2 Guest VM</template>
+            <name>Template XCP-NG 8.2 Guest VM</name>
+            <description>Author: Guille Rodriguez
+Website: https://github.com/guillerg86</description>
+            <templates>
+                <template>
+                    <name>Template VM VMware macros</name>
+                </template>
+            </templates>
+            <groups>
+                <group>
+                    <name>Templates/Applications</name>
+                </group>
+            </groups>
+            <items>
+                <item>
+                    <uuid>204eeb42b0f44cff90b86ff7a6eff99a</uuid>
+                    <name>Auto poweron</name>
+                    <key>xcpng.vms.details[{HOST.HOST},&quot;auto-poweron&quot;]</key>
+                    <delay>1h</delay>
+                    <history>7d</history>
+                    <description>Check if autopoweron is configured on VM</description>
+                    <valuemap>
+                        <name>VM Enabled Disabled</name>
+                    </valuemap>
+                    <preprocessing>
+                        <step>
+                            <type>JAVASCRIPT</type>
+                            <parameters>
+                                <parameter>var newvalue;
+switch(value) {
+	case &quot;false&quot;:
+		newvalue = 0;
+		break;
+	case &quot;true&quot;:
+		newvalue = 1;
+		break;
+	default:
+		newvalue = value;
+	}
+return newvalue;</parameter>
+                            </parameters>
+                        </step>
+                    </preprocessing>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>XCP-NG</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>81a30c3d0f4445b782422653e8ecf0ee</uuid>
+                    <name>HVM</name>
+                    <key>xcpng.vms.details[{HOST.HOST},&quot;hvm&quot;]</key>
+                    <delay>10m</delay>
+                    <history>7d</history>
+                    <description>Virtualization Mode (HVM, PV)</description>
+                    <valuemap>
+                        <name>VM Enabled Disabled</name>
+                    </valuemap>
+                    <preprocessing>
+                        <step>
+                            <type>JAVASCRIPT</type>
+                            <parameters>
+                                <parameter>var newvalue;
+switch(value) {
+	case &quot;false&quot;:
+		newvalue = 0;
+		break;
+	case &quot;true&quot;:
+		newvalue = 1;
+		break;
+	default:
+		newvalue = value;
+	}
+return newvalue;</parameter>
+                            </parameters>
+                        </step>
+                        <step>
+                            <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                            <parameters>
+                                <parameter>1h</parameter>
+                            </parameters>
+                        </step>
+                    </preprocessing>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>XCP-NG</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>88515e9a058949c9b136fc23b26946bf</uuid>
+                    <name>Memory actual</name>
+                    <key>xcpng.vms.details[{HOST.HOST},&quot;memory-actual&quot;]</key>
+                    <history>7d</history>
+                    <units>B</units>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>XCP-NG</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>9af0005cdd2d47d293189ebea835a908</uuid>
+                    <name>Memory dynamic max</name>
+                    <key>xcpng.vms.details[{HOST.HOST},&quot;memory-dynamic-max&quot;]</key>
+                    <delay>10m</delay>
+                    <history>7d</history>
+                    <units>B</units>
+                    <preprocessing>
+                        <step>
+                            <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                            <parameters>
+                                <parameter>1h</parameter>
+                            </parameters>
+                        </step>
+                    </preprocessing>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>XCP-NG</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>761ddee5eecd464daa9d93e2827f9d14</uuid>
+                    <name>Memory dynamic min</name>
+                    <key>xcpng.vms.details[{HOST.HOST},&quot;memory-dynamic-min&quot;]</key>
+                    <delay>10m</delay>
+                    <history>7d</history>
+                    <units>B</units>
+                    <preprocessing>
+                        <step>
+                            <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                            <parameters>
+                                <parameter>1h</parameter>
+                            </parameters>
+                        </step>
+                    </preprocessing>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>XCP-NG</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>3569b16112b04496933f211159d2b0ca</uuid>
+                    <name>Memory overhead</name>
+                    <key>xcpng.vms.details[{HOST.HOST},&quot;memory-overhead&quot;]</key>
+                    <history>7d</history>
+                    <units>B</units>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>XCP-NG</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>064ecc8f4efb4fb18a6b85f6c926ab5c</uuid>
+                    <name>Memory static max</name>
+                    <key>xcpng.vms.details[{HOST.HOST},&quot;memory-static-max&quot;]</key>
+                    <delay>10m</delay>
+                    <history>7d</history>
+                    <units>B</units>
+                    <preprocessing>
+                        <step>
+                            <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                            <parameters>
+                                <parameter>1h</parameter>
+                            </parameters>
+                        </step>
+                    </preprocessing>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>XCP-NG</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>10156f499c7d47bd9d9f6c771f00a9ad</uuid>
+                    <name>Memory static min</name>
+                    <key>xcpng.vms.details[{HOST.HOST},&quot;memory-static-min&quot;]</key>
+                    <delay>10m</delay>
+                    <history>7d</history>
+                    <units>B</units>
+                    <preprocessing>
+                        <step>
+                            <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                            <parameters>
+                                <parameter>1h</parameter>
+                            </parameters>
+                        </step>
+                    </preprocessing>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>XCP-NG</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>306661cdb4ac4a9580e75718764e27b3</uuid>
+                    <name>Memory target</name>
+                    <key>xcpng.vms.details[{HOST.HOST},&quot;memory-target&quot;]</key>
+                    <delay>10m</delay>
+                    <history>7d</history>
+                    <units>B</units>
+                    <preprocessing>
+                        <step>
+                            <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                            <parameters>
+                                <parameter>1h</parameter>
+                            </parameters>
+                        </step>
+                    </preprocessing>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>XCP-NG</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>6bdccf21936c44a8989c3734e5b2dbbf</uuid>
+                    <name>Power state</name>
+                    <key>xcpng.vms.details[{HOST.HOST},&quot;power-state&quot;]</key>
+                    <history>7d</history>
+                    <description>The current power state of the virtual machine.</description>
+                    <valuemap>
+                        <name>VirtualMachinePowerState</name>
+                    </valuemap>
+                    <preprocessing>
+                        <step>
+                            <type>JAVASCRIPT</type>
+                            <parameters>
+                                <parameter>var newvalue;
+switch(value) {
+	case &quot;halted&quot;:
+		newvalue = 0;
+		break;
+	case &quot;running&quot;:
+		newvalue = 1;
+		break;
+	case &quot;suspended&quot;:
+		newvalue = 2;
+		break;
+	case &quot;paused&quot;:
+		newvalue = 3;
+		break;
+	default:
+		newvalue = value;
+	}
+return newvalue;</parameter>
+                            </parameters>
+                        </step>
+                        <step>
+                            <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                            <parameters>
+                                <parameter>1h</parameter>
+                            </parameters>
+                        </step>
+                    </preprocessing>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>XCP-NG</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>a3c55fdadc524a62abc2ca33f3e63c94</uuid>
+                    <name>Requires reboot</name>
+                    <key>xcpng.vms.details[{HOST.HOST},&quot;requires-reboot&quot;]</key>
+                    <delay>10m</delay>
+                    <history>7d</history>
+                    <description>Check if VM requires a reboot via XCP-ng</description>
+                    <valuemap>
+                        <name>VM yes no</name>
+                    </valuemap>
+                    <preprocessing>
+                        <step>
+                            <type>JAVASCRIPT</type>
+                            <parameters>
+                                <parameter>var newvalue;
+switch(value) {
+	case &quot;false&quot;:
+		newvalue = 0;
+		break;
+	case &quot;true&quot;:
+		newvalue = 1;
+		break;
+	default:
+		newvalue = value;
+	}
+return newvalue;</parameter>
+                            </parameters>
+                        </step>
+                    </preprocessing>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>XCP-NG</value>
+                        </tag>
+                    </tags>
+                    <triggers>
+                        <trigger>
+                            <uuid>3928c4c3833140de8482275c613f57af</uuid>
+                            <expression>last(/Template XCP-NG 8.2 Guest VM/xcpng.vms.details[{HOST.HOST},&quot;requires-reboot&quot;])=1</expression>
+                            <name>VM requires reboot</name>
+                            <priority>INFO</priority>
+                            <description>Hypervisor has flagged this VM as requires reboot</description>
+                            <manual_close>YES</manual_close>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <uuid>7f82a124efa44a62b209defd32a0b76b</uuid>
+                    <name>Start-time</name>
+                    <key>xcpng.vms.details[{HOST.HOST},&quot;start-time&quot;]</key>
+                    <history>7d</history>
+                    <value_type>FLOAT</value_type>
+                    <units>unixtime</units>
+                    <description>Datetime when VM was poweredon</description>
+                    <preprocessing>
+                        <step>
+                            <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                            <parameters>
+                                <parameter>1h</parameter>
+                            </parameters>
+                        </step>
+                    </preprocessing>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>XCP-NG</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>6ad118f2e8354aba81ffb80da5d6dc2c</uuid>
+                    <name>Uptime</name>
+                    <key>xcpng.vms.details[{HOST.HOST},&quot;uptime&quot;]</key>
+                    <delay>3m</delay>
+                    <history>7d</history>
+                    <value_type>FLOAT</value_type>
+                    <units>s</units>
+                    <description>Time since VM was poweredon</description>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>XCP-NG</value>
+                        </tag>
+                    </tags>
+                    <triggers>
+                        <trigger>
+                            <uuid>9e8477cec959439887ed89600b50fc2c</uuid>
+                            <expression>last(/Template XCP-NG 8.2 Guest VM/xcpng.vms.details[{HOST.HOST},&quot;uptime&quot;])&gt;5s and last(/Template XCP-NG 8.2 Guest VM/xcpng.vms.details[{HOST.HOST},&quot;uptime&quot;])&lt;10m</expression>
+                            <name>VM has been restarted (uptime &lt; 10m)</name>
+                            <priority>WARNING</priority>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <uuid>884ee37ca90d44f3a2cdac14a3483304</uuid>
+                    <name>Number of virtual CPUs</name>
+                    <key>xcpng.vms.details[{HOST.HOST},&quot;VCPUs-number&quot;]</key>
+                    <delay>10m</delay>
+                    <history>7d</history>
+                    <description>Number of Virtual CPUs</description>
+                    <preprocessing>
+                        <step>
+                            <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                            <parameters>
+                                <parameter>1h</parameter>
+                            </parameters>
+                        </step>
+                    </preprocessing>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>XCP-NG</value>
+                        </tag>
+                    </tags>
+                </item>
+                <item>
+                    <uuid>2f14948041fd496eb959f5964ce65247</uuid>
+                    <name>CPU Usage</name>
+                    <key>xcpng.vms.details[{HOST.HOST},&quot;VCPUs-utilisation&quot;]</key>
+                    <history>7d</history>
+                    <value_type>FLOAT</value_type>
+                    <description>Usage of CPU</description>
+                    <preprocessing>
+                        <step>
+                            <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                            <parameters>
+                                <parameter>30m</parameter>
+                            </parameters>
+                        </step>
+                    </preprocessing>
+                    <tags>
+                        <tag>
+                            <tag>Application</tag>
+                            <value>XCP-NG</value>
+                        </tag>
+                    </tags>
+                </item>
+            </items>
+            <discovery_rules>
+                <discovery_rule>
+                    <uuid>5dfc20cca5c545529a674de175c372af</uuid>
+                    <name>Network device discovery</name>
+                    <key>xcpng.vms.vif.discovery[{HOST.HOST}]</key>
+                    <delay>1h</delay>
+                    <lifetime>2h</lifetime>
+                    <description>Discovery of all network devices.</description>
+                    <item_prototypes>
+                        <item_prototype>
+                            <uuid>98e18cb04cb74db09ba42d03e5ab7ba2</uuid>
+                            <name>VIF {#VM.VIF.UUID}: KBytes received</name>
+                            <key>xcpng.vms.vif.details[{#VM.VIF.UUID},&quot;vif-kbytes-rcvd&quot;]</key>
+                            <history>7d</history>
+                            <value_type>FLOAT</value_type>
+                            <units>K</units>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>Network</value>
+                                </tag>
+                                <tag>
+                                    <tag>Network</tag>
+                                    <value>{#VM.VIF.UUID}</value>
+                                </tag>
+                            </tags>
+                        </item_prototype>
+                        <item_prototype>
+                            <uuid>c33d0915dd034b1ba4251fa4b2155304</uuid>
+                            <name>VIF {#VM.VIF.UUID}: KBytes transmitted</name>
+                            <key>xcpng.vms.vif.details[{#VM.VIF.UUID},&quot;vif-kbytes-sent&quot;]</key>
+                            <history>7d</history>
+                            <value_type>FLOAT</value_type>
+                            <units>K</units>
+                            <description>Interface MAC Address</description>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>Network</value>
+                                </tag>
+                                <tag>
+                                    <tag>Network</tag>
+                                    <value>{#VM.VIF.UUID}</value>
+                                </tag>
+                            </tags>
+                        </item_prototype>
+                        <item_prototype>
+                            <uuid>ab0ff852407143d384d46d2a0c6675da</uuid>
+                            <name>VIF {#VM.VIF.UUID}: MAC</name>
+                            <key>xcpng.vms.vif.details[{#VM.VIF.UUID},&quot;vif-mac-addr&quot;]</key>
+                            <delay>1h</delay>
+                            <history>7d</history>
+                            <trends>0</trends>
+                            <value_type>CHAR</value_type>
+                            <description>Interface MAC Address</description>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>Network</value>
+                                </tag>
+                                <tag>
+                                    <tag>Network</tag>
+                                    <value>{#VM.VIF.UUID}</value>
+                                </tag>
+                            </tags>
+                        </item_prototype>
+                        <item_prototype>
+                            <uuid>7d80b0c79abb4b69b556ff6d38e88f4f</uuid>
+                            <name>VIF {#VM.VIF.UUID}: MTU</name>
+                            <key>xcpng.vms.vif.details[{#VM.VIF.UUID},&quot;vif-mtu&quot;]</key>
+                            <delay>1h</delay>
+                            <history>7d</history>
+                            <trends>0</trends>
+                            <value_type>CHAR</value_type>
+                            <description>Interface MTU</description>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>Network</value>
+                                </tag>
+                                <tag>
+                                    <tag>Network</tag>
+                                    <value>{#VM.VIF.UUID}</value>
+                                </tag>
+                            </tags>
+                        </item_prototype>
+                        <item_prototype>
+                            <uuid>9cf9897489ff4a1a9e7cb24a32c98066</uuid>
+                            <name>VIF {#VM.VIF.UUID}: Network / Vlan Name</name>
+                            <key>xcpng.vms.vif.details[{#VM.VIF.UUID},&quot;vif-network-name&quot;]</key>
+                            <delay>1h</delay>
+                            <history>7d</history>
+                            <trends>0</trends>
+                            <value_type>CHAR</value_type>
+                            <description>Network name or VLAN name where Interface is connected.</description>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>Network</value>
+                                </tag>
+                                <tag>
+                                    <tag>Network</tag>
+                                    <value>{#VM.VIF.UUID}</value>
+                                </tag>
+                            </tags>
+                        </item_prototype>
+                    </item_prototypes>
+                    <preprocessing>
+                        <step>
+                            <type>JSONPATH</type>
+                            <parameters>
+                                <parameter>$.vif_list</parameter>
+                            </parameters>
+                        </step>
+                    </preprocessing>
+                </discovery_rule>
+            </discovery_rules>
+            <valuemaps>
+                <valuemap>
+                    <uuid>519df291854946dfa679a58d2ed3c00a</uuid>
+                    <name>VirtualMachinePowerState</name>
+                    <mappings>
+                        <mapping>
+                            <value>0</value>
+                            <newvalue>poweredOff</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>1</value>
+                            <newvalue>poweredOn</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>2</value>
+                            <newvalue>suspended</newvalue>
+                        </mapping>
+                    </mappings>
+                </valuemap>
+                <valuemap>
+                    <uuid>9fa7cce0a0a940079ad376f0698040cf</uuid>
+                    <name>VM Enabled Disabled</name>
+                    <mappings>
+                        <mapping>
+                            <value>0</value>
+                            <newvalue>disabled</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>1</value>
+                            <newvalue>enabled</newvalue>
+                        </mapping>
+                    </mappings>
+                </valuemap>
+                <valuemap>
+                    <uuid>259df6dd2b66433493ae25247699a27a</uuid>
+                    <name>VM yes no</name>
+                    <mappings>
+                        <mapping>
+                            <value>0</value>
+                            <newvalue>no</newvalue>
+                        </mapping>
+                        <mapping>
+                            <value>1</value>
+                            <newvalue>yes</newvalue>
+                        </mapping>
+                    </mappings>
+                </valuemap>
+            </valuemaps>
+        </template>
+    </templates>
+    <triggers>
+        <trigger>
+            <uuid>16de107735b2441e97184245a91587d2</uuid>
+            <expression>last(/Template XCP-NG 8.2 Guest VM/xcpng.vms.details[{HOST.HOST},&quot;power-state&quot;])=3 and last(/Template XCP-NG 8.2 Guest VM/xcpng.vms.details[{HOST.HOST},&quot;auto-poweron&quot;])=1</expression>
+            <name>VM is paused</name>
+            <priority>HIGH</priority>
+            <description>VM is powered off but auto poweron is enabled</description>
+            <manual_close>YES</manual_close>
+        </trigger>
+        <trigger>
+            <uuid>bf56ae37cb7d4b7682548eee9083c3e6</uuid>
+            <expression>last(/Template XCP-NG 8.2 Guest VM/xcpng.vms.details[{HOST.HOST},&quot;power-state&quot;])=0 and last(/Template XCP-NG 8.2 Guest VM/xcpng.vms.details[{HOST.HOST},&quot;auto-poweron&quot;])=1</expression>
+            <name>VM is powered off</name>
+            <priority>HIGH</priority>
+            <description>VM is powered off but auto poweron is enabled</description>
+            <manual_close>YES</manual_close>
+        </trigger>
+        <trigger>
+            <uuid>d4b28ac9ce0547c4afa7c346d6264de1</uuid>
+            <expression>last(/Template XCP-NG 8.2 Guest VM/xcpng.vms.details[{HOST.HOST},&quot;power-state&quot;])=2 and last(/Template XCP-NG 8.2 Guest VM/xcpng.vms.details[{HOST.HOST},&quot;auto-poweron&quot;])=1</expression>
+            <name>VM is suspended</name>
+            <priority>HIGH</priority>
+            <description>VM is powered off but auto poweron is enabled</description>
+            <manual_close>YES</manual_close>
+        </trigger>
+    </triggers>
+</zabbix_export>
