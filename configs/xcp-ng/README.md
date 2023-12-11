@@ -134,6 +134,6 @@ Output like
 xcpng.vms.discovery [t|{"vmlist": [{"{#VM.NAME}": "webserver", "{#VM.UUID}": "bc919918-cbdc-8bd6-ad15-dcae0f74c84c"}, {"{#VM.NAME}": "puppet-ansible", "{#VM.UUID}": "0cf8f762-b654-febd-0cfb-b2dc7b53d67b"}, {"{#VM.NAME}": "Splunk", "{#VM.UUID}": "9f10841b-37dc-bd58-a1f0-1ae6846b83bf"}, {"{#VM.NAME}": "docker02", "{#VM.UUID}": "1b51519b-eae5-a2bb-b456-5dc4f20186e0"}]}]
 ```
 
-All done!
+Now, assign the `Template XCP-NG 8.2` to XCP Server, and that's all
 
 ![VM on XCP-NG8.2 LatestData](latest-data-xcpng8.2-vm.png?raw=true "VM Latest Data")
