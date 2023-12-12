@@ -72,11 +72,6 @@ Website: https://github.com/guillerg86</description>
             <name>Template XCP-NG 8.2 Guest VM</name>
             <description>Author: Guille Rodriguez
 Website: https://github.com/guillerg86</description>
-            <templates>
-                <template>
-                    <name>Template VM VMware macros</name>
-                </template>
-            </templates>
             <groups>
                 <group>
                     <name>Templates/Applications</name>
@@ -394,6 +389,7 @@ return newvalue;</parameter>
                     <uuid>7f82a124efa44a62b209defd32a0b76b</uuid>
                     <name>Start-time</name>
                     <key>xcpng.vms.details[{HOST.HOST},&quot;start-time&quot;]</key>
+                    <delay>10m</delay>
                     <history>7d</history>
                     <value_type>FLOAT</value_type>
                     <units>unixtime</units>

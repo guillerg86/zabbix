@@ -1,12 +1,13 @@
 # Templates
 
+Tested on Zabbix 6.4 version but sure will Work on 6.0, 6.2 and maybe earlier versions
+
 ## Template XCP-ng 8.2 
 
 This template is for the Hipervisor XCP-ng 8.2. Execute a discovery for all VMs inside Hypervisor, for each VM discovered, Zabbix create a new Host (Host Prototype) and assign a new Template XCP-ng 8.2 Guest VM with this parameters.
 
 - HOST: VM UUID
 - VISIBLE NAME: NAME_LABEL VM
-
 
 
 ## Template XCP-ng 8.2 Guest VM

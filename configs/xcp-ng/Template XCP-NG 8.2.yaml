@@ -42,8 +42,6 @@ zabbix_export:
       description: |
         Author: Guille Rodriguez
         Website: https://github.com/guillerg86
-      templates:
-        - name: 'Template VM VMware macros'
       groups:
         - name: Templates/Applications
       items:
@@ -257,6 +255,7 @@ zabbix_export:
         - uuid: 7f82a124efa44a62b209defd32a0b76b
           name: Start-time
           key: 'xcpng.vms.details[{HOST.HOST},"start-time"]'
+          delay: 10m
           history: 7d
           value_type: FLOAT
           units: unixtime
