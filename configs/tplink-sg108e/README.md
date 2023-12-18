@@ -174,3 +174,11 @@ Output be like
     "received_packets_error": "708"
 }
 ```
+
+## "Problems detected"
+
+This switch only allows some concurrent sessions on web management, so when this script connects to retrieve data this will force a logout on your web session if you are connected. You can do one of both things.
+
+- Install TP-Link Easy Smart Configuration Utility (you can manage switch without getting disconnected)
+- Stop monitoring this switch while you are configuring the switch via web.
+
