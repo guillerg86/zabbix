@@ -417,6 +417,7 @@ zabbix_export:
                   value: 'Interface-{#IFNUMBER}'
             - uuid: bf08d82b797f4d388167dd27254ae2bc
               name: 'Interface #{#IFNUMBER}: Raw data'
+              type: EXTERNAL
               key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
               delay: 5m
               history: '0'
