@@ -92,7 +92,7 @@ Only creates Item prototypes when {#IFADMINSTATUS} = 1 (enabled)
   - Firmware: 20230218 ✔
   - Firmware: 20201208 ✔
 
-## Usage
+## Test script before install on Zabbix
 
 If you want to test before install on Zabbix, you need a machine with Python 3.x installed (tested on 3.12).
 
@@ -174,6 +174,138 @@ Output be like
     "received_packets_error": "708"
 }
 ```
+
+**All Info**
+
+```
+python3 tplinkswitch2zabbix.py -i IP_ADDRESS -u WEBUSERNAME -p WEBPASSWORD -a allinfo
+```
+
+Output be like 
+
+```
+{
+    "firmware": "1.0.0 Build 20230218 Rel.50633",
+    "hardware": "TL-SG108E 6.0",
+    "description": "PSC-SW-SG108E",
+    "mac_address": "00:31:92:B3:EE:12",
+    "ip_address": "10.15.1.2",
+    "netmask": "255.255.255.0",
+    "gateway": "10.15.1.1",
+    "port_number": 8,
+    "ports": [
+        {
+            "port_number": 1,
+            "admin_status": "1",
+            "trunk_status": "0",
+            "operation_status": 0,
+            "speed_config": "1",
+            "speed_actual": "0",
+            "speed_bps": 0,
+            "flowcontrol_config": "0",
+            "flowcontrol_actual": "0",
+            "transmitted_packets": "0",
+            "transmitted_packets_error": "0",
+            "received_packets": "0",
+            "received_packets_error": "0"
+        },
+		....
+		....
+        {
+            "port_number": 8,
+            "admin_status": "1",
+            "trunk_status": "0",
+            "operation_status": 1,
+            "speed_config": "1",
+            "speed_actual": "6",
+            "speed_bps": 1000000000,
+            "flowcontrol_config": "0",
+            "flowcontrol_actual": "0",
+            "transmitted_packets": "346961",
+            "transmitted_packets_error": "0",
+            "received_packets": "540128",
+            "received_packets_error": "504"
+        }
+    ]
+}
+```
+
+## Installation
+
+You can monitor this switch using agent or server/proxy (external script). 
+
+### Macros
+
+|MACRO|DESCRIPTION|
+|-|-|
+|{$SW.IP}|IP ADDRESS of the Switch|
+|{$SW.USER}|Switch Webadmin user|
+|{$SW.PASS}|Switch Webadmin password|
+
+### By Zabbix agent
+
+- Import template `Template TP-Link SG108E Webparsing by Zabbix Agent.yaml` to your zabbix server.
+- Create a folder inside zabbix-agent folder.
+
+```
+mkdir /etc/zabbix/scripts
+```
+
+- Download script `tplinkswitch2zabbix.py` and copy to scripts folder
+
+```
+cp tplinkswitch2zabbix.py /etc/zabbix/scripts/
+chmod +x /etc/zabbix/scripts/tplinkswitch2zabbix.py
+```
+- Download `tplinkswitch.conf` and copy to `/etc/zabbix/zabbix_agentd.d/` or `/etc/zabbix/zabbix_agent2.d/`.
+- Reboot agent with
+
+```
+systemctl restart zabbix_agentd.service
+```
+or
+
+```
+systemctl restart zabbix_agent2.service
+```
+
+- Create a host on Zabbix with agent and asigng the Template `Template TP-Link SG108E Webparsing by Zabbix Agent.yaml`
+- Inside host set macros values
+- If host is monitored by proxy (wait, resync or restart proxy)
+- Test and confirm
+
+
+### By Zabbix Server / Proxy (external script)
+
+External scripts are scripts executed by zabbix server or proxy (not by agent), so no need to copy UserParameters config. 
+
+- Import template `Template TP-LINK SG108E WebParsing by Zabbix Server or Proxy.yaml` to your zabbix server.
+- Check the path of ExternalScripts on your Zabbix Server or Zabbix Proxy config (default is on `/usr/lib/zabbix/externalscripts`)
+
+For server
+
+```
+cat /etc/zabbix/zabbix_server.conf | grep ExternalScripts
+```
+
+For proxy
+
+```
+cat /etc/zabbix/zabbix_proxy.conf | grep ExternalScripts
+```
+
+- Download python script and copy to ExternalScripts path
+
+```
+cp tplinkswitch2zabbix.py /usr/lib/zabbix/externalscripts/
+chmod +x /usr/lib/zabbix/externalscripts/tplinkswitch2zabbix.py
+```
+
+- Create a host, add template `Template TP-LINK SG108E WebParsing by Zabbix Server or Proxy`
+- Inside host set macros values
+- If host is monitored by proxy (wait, resync or restart proxy)
+- Test and confirm
+
 
 ## "Problems detected"
 

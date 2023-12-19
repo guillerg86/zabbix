@@ -4,16 +4,16 @@ zabbix_export:
     - uuid: 36bff6c29af64692839d077febfc7079
       name: 'Templates/Network devices'
   templates:
-    - uuid: ded3b65f399c43c1ba3fbebc35f67c41
-      template: 'Template TP-LINK SG108E WebParsing'
-      name: 'Template TP-LINK SG108E WebParsing'
+    - uuid: 08c0d66080ed4d898a8539b05e4f3ffd
+      template: 'Template TP-LINK SG108E WebParsing by Zabbix Server or Proxy'
+      name: 'Template TP-LINK SG108E WebParsing by Zabbix Server or Proxy'
       description: |
         Author: Guille Rodriguez
         Website: https://github.com/guillerg86
       groups:
         - name: 'Templates/Network devices'
       items:
-        - uuid: 01539465a53c47c0b21a9ae968f60ac7
+        - uuid: 051de8eceacc4c0f87631f2df8b35c6a
           name: Firmware
           type: DEPENDENT
           key: tplink.switch.sysinfo.firmware
@@ -25,19 +25,19 @@ zabbix_export:
               parameters:
                 - $.firmware
           master_item:
-            key: 'tplink.switch.sysinfo[{$SW.IP},{$SW.USER},{$SW.PASS}]'
+            key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,sysinfo]'
           tags:
             - tag: Application
               value: General
           triggers:
-            - uuid: 82093bb3548b4c3d9c88352dea103ef7
-              expression: 'change(/Template TP-LINK SG108E WebParsing/tplink.switch.sysinfo.firmware)<>0'
+            - uuid: b7b2a85e4669436b97055366042e06d7
+              expression: 'change(/Template TP-LINK SG108E WebParsing by Zabbix Server or Proxy/tplink.switch.sysinfo.firmware)<>0'
               name: 'Firmware changed'
               opdata: '{ITEM.LASTVALUE}'
               priority: WARNING
               description: 'Firmware has been changed'
               manual_close: 'YES'
-        - uuid: 6381e44b99cc41ef9e9bd20558dbf630
+        - uuid: a9a9d5ad081a4ed5b23c991663708f04
           name: Hardware
           type: DEPENDENT
           key: tplink.switch.sysinfo.hardware
@@ -49,19 +49,19 @@ zabbix_export:
               parameters:
                 - $.hardware
           master_item:
-            key: 'tplink.switch.sysinfo[{$SW.IP},{$SW.USER},{$SW.PASS}]'
+            key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,sysinfo]'
           tags:
             - tag: Application
               value: General
           triggers:
-            - uuid: 7283bbbbc245499b960c285b0e7a16cf
-              expression: 'change(/Template TP-LINK SG108E WebParsing/tplink.switch.sysinfo.hardware)<>0'
+            - uuid: cd6e8dac4976497e8a3bf24d2455711a
+              expression: 'change(/Template TP-LINK SG108E WebParsing by Zabbix Server or Proxy/tplink.switch.sysinfo.hardware)<>0'
               name: 'Hardware changed'
               opdata: '{ITEM.LASTVALUE}'
               priority: AVERAGE
               description: 'Hardware has been changed'
               manual_close: 'YES'
-        - uuid: 36616d425651473a80e9c4d5e6900b2e
+        - uuid: 7c090f59ad704d21a01dccc0a9a41d89
           name: Hostname
           type: DEPENDENT
           key: tplink.switch.sysinfo.hostname
@@ -73,19 +73,19 @@ zabbix_export:
               parameters:
                 - $.description
           master_item:
-            key: 'tplink.switch.sysinfo[{$SW.IP},{$SW.USER},{$SW.PASS}]'
+            key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,sysinfo]'
           tags:
             - tag: Application
               value: General
           triggers:
-            - uuid: 594d99b0b54b45bb911645e97a472f15
-              expression: 'change(/Template TP-LINK SG108E WebParsing/tplink.switch.sysinfo.hostname)<>0'
+            - uuid: e12c8b8fcee14b4e981a547d31929849
+              expression: 'change(/Template TP-LINK SG108E WebParsing by Zabbix Server or Proxy/tplink.switch.sysinfo.hostname)<>0'
               name: 'Hostname changed'
               opdata: '{ITEM.LASTVALUE}'
               priority: INFO
               description: 'Hostname has been changed'
               manual_close: 'YES'
-        - uuid: feabb754c2264af5aaca79f154b222a5
+        - uuid: fe8ed0f1beeb40a8a72cac0084178885
           name: 'Mac Address'
           type: DEPENDENT
           key: tplink.switch.sysinfo.mac_address
@@ -97,21 +97,22 @@ zabbix_export:
               parameters:
                 - $.mac_address
           master_item:
-            key: 'tplink.switch.sysinfo[{$SW.IP},{$SW.USER},{$SW.PASS}]'
+            key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,sysinfo]'
           tags:
             - tag: Application
               value: General
           triggers:
-            - uuid: df4242f651cc4c92821e9ae551ed67d8
-              expression: 'change(/Template TP-LINK SG108E WebParsing/tplink.switch.sysinfo.mac_address)<>0'
+            - uuid: 53c708bcaa794d20bcf4d2d2c380af42
+              expression: 'change(/Template TP-LINK SG108E WebParsing by Zabbix Server or Proxy/tplink.switch.sysinfo.mac_address)<>0'
               name: 'MAC address changed'
               opdata: '{ITEM.LASTVALUE}'
               priority: AVERAGE
               description: 'MAC address has been changed'
               manual_close: 'YES'
-        - uuid: 19f4634336f045e2ba00190cd968dd37
+        - uuid: cc1ea5d94dae4f498498e2105eb3baca
           name: 'System Info Raw Data'
-          key: 'tplink.switch.sysinfo[{$SW.IP},{$SW.USER},{$SW.PASS}]'
+          type: EXTERNAL
+          key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,sysinfo]'
           delay: 1h
           history: '0'
           trends: '0'
@@ -124,9 +125,10 @@ zabbix_export:
             - tag: Application
               value: General
       discovery_rules:
-        - uuid: 78912c85ccb44cbbbca579bde47b432e
+        - uuid: 7d001601a7a8429c9ea0163fd5eaee22
           name: 'Interfaces discovery'
-          key: 'tplink.switch.if.discovery[{$SW.IP},{$SW.USER},{$SW.PASS}]'
+          type: EXTERNAL
+          key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,discovery]'
           delay: 30m
           filter:
             evaltype: AND
@@ -141,10 +143,10 @@ zabbix_export:
           lifetime: 2d
           description: 'Discovering network interfaces'
           item_prototypes:
-            - uuid: 5d6f719d6e3a423483d35f65b610a390
+            - uuid: ac651fee43a34f73b8cd05ac68e3390a
               name: 'Interface #{#IFNUMBER}: Admin status'
               type: DEPENDENT
-              key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER},"adminstatus"]'
+              key: 'tplink.switch.if.info.port.admin_status[{#IFNUMBER}]'
               delay: '0'
               history: 14d
               description: 'Administrative status of the port'
@@ -155,14 +157,14 @@ zabbix_export:
                   parameters:
                     - $.admin_status
               master_item:
-                key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
-            - uuid: be754ef0cb5042a1b23bb1889aea8cd2
+            - uuid: 34c4920b469c406797514db41481584e
               name: 'Interface #{#IFNUMBER}: Flow control actual'
               type: DEPENDENT
-              key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER},"flowcontrol_actual"]'
+              key: 'tplink.switch.if.info.port.flowcontrol_actual[{#IFNUMBER}]'
               delay: '0'
               history: 14d
               description: |
@@ -177,14 +179,14 @@ zabbix_export:
                   parameters:
                     - $.flowcontrol_config
               master_item:
-                key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
-            - uuid: 5224d898b51345ce9a80909004c3adad
+            - uuid: 37d566a51c3d45c48888d2eafbe0f8f9
               name: 'Interface #{#IFNUMBER}: Flow control configuration'
               type: DEPENDENT
-              key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER},"flowcontrol_config"]'
+              key: 'tplink.switch.if.info.port.flowcontrol_config[{#IFNUMBER}]'
               delay: '0'
               history: 14d
               description: |
@@ -199,23 +201,23 @@ zabbix_export:
                   parameters:
                     - $.flowcontrol_config
               master_item:
-                key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
               trigger_prototypes:
-                - uuid: a9a1772e629a44a7b33df74bf03ca512
-                  expression: 'change(/Template TP-LINK SG108E WebParsing/tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER},"flowcontrol_config"])<>0'
+                - uuid: df146152c9c245389c0b86e346c6dbf3
+                  expression: 'change(/Template TP-LINK SG108E WebParsing by Zabbix Server or Proxy/tplink.switch.if.info.port.flowcontrol_config[{#IFNUMBER}])<>0'
                   recovery_mode: NONE
                   name: 'Interface #{#IFNUMBER}: Flow control configuration changed'
                   opdata: '{ITEM.LASTVALUE}'
                   priority: AVERAGE
                   description: 'Flow control configuration on port changed (admin changes)'
                   manual_close: 'YES'
-            - uuid: b45c769ad0bf4c6da3c65f72a004d503
+            - uuid: c2498864961e45149baac15c83ead187
               name: 'Interface #{#IFNUMBER}: Operational status'
               type: DEPENDENT
-              key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER},"operation_status"]'
+              key: 'tplink.switch.if.info.port.operation_status[{#IFNUMBER}]'
               delay: '0'
               history: 14d
               description: 'Operational status of the port'
@@ -226,14 +228,14 @@ zabbix_export:
                   parameters:
                     - $.operation_status
               master_item:
-                key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
-            - uuid: ece641d322ee46c9b78615f00e61c890
+            - uuid: 23c0a2494fc54de3bc8e1e7692845510
               name: 'Interface #{#IFNUMBER}: Received packets'
               type: DEPENDENT
-              key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER},"received_packets"]'
+              key: 'tplink.switch.if.info.port.received_packets[{#IFNUMBER}]'
               delay: '0'
               history: 14d
               description: 'Received packets on port'
@@ -245,14 +247,14 @@ zabbix_export:
                   parameters:
                     - ''
               master_item:
-                key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
-            - uuid: c13c09d1cc8b4346a0ff2c6fc91e497d
+            - uuid: 3f8dd1b1788145f3bdb2903b1556d7a7
               name: 'Interface #{#IFNUMBER}: Received packets error'
               type: DEPENDENT
-              key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER},"received_packets_error"]'
+              key: 'tplink.switch.if.info.port.received_packets_error[{#IFNUMBER}]'
               delay: '0'
               history: 14d
               description: 'Received packets error on port'
@@ -264,14 +266,14 @@ zabbix_export:
                   parameters:
                     - ''
               master_item:
-                key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
-            - uuid: 6bf79bac8a5046db9be4bfe0d93119bf
+            - uuid: 47580157b4fe4cfca9e596ecc93c64cc
               name: 'Interface #{#IFNUMBER}: Speed actual'
               type: DEPENDENT
-              key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER},"speed_actual"]'
+              key: 'tplink.switch.if.info.port.speed_actual[{#IFNUMBER}]'
               delay: '0'
               history: 14d
               description: |
@@ -290,14 +292,14 @@ zabbix_export:
                   parameters:
                     - $.speed_actual
               master_item:
-                key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
-            - uuid: a3a26826866b4bb9a991bc1652f28178
+            - uuid: f410171f6c004524a07e841c653f6f0c
               name: 'Interface #{#IFNUMBER}: Speed'
               type: DEPENDENT
-              key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER},"speed_bps"]'
+              key: 'tplink.switch.if.info.port.speed_bps[{#IFNUMBER}]'
               delay: '0'
               history: 14d
               units: bps
@@ -309,13 +311,13 @@ zabbix_export:
                   parameters:
                     - $.speed_bps
               master_item:
-                key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
               trigger_prototypes:
-                - uuid: 40421e5178e24952a4bf248153e2289e
-                  expression: 'change(/Template TP-LINK SG108E WebParsing/tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER},"speed_bps"])<0 and last(/Template TP-LINK SG108E WebParsing/tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER},"speed_bps"])>0'
+                - uuid: 89b84f5777574706bf69fed0ee5c933b
+                  expression: 'change(/Template TP-LINK SG108E WebParsing by Zabbix Server or Proxy/tplink.switch.if.info.port.speed_bps[{#IFNUMBER}])<0 and last(/Template TP-LINK SG108E WebParsing by Zabbix Server or Proxy/tplink.switch.if.info.port.speed_bps[{#IFNUMBER}])>0'
                   recovery_mode: NONE
                   name: 'Interface #{#IFNUMBER}: Link speed is lower than before'
                   priority: WARNING
@@ -323,11 +325,11 @@ zabbix_export:
                   manual_close: 'YES'
                   dependencies:
                     - name: 'Interface #{#IFNUMBER}: Speed configuration changed'
-                      expression: 'change(/Template TP-LINK SG108E WebParsing/tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER},"speed_config"])<>0'
-            - uuid: f4f80e7c31f14449896bc20ad243c2ed
+                      expression: 'change(/Template TP-LINK SG108E WebParsing by Zabbix Server or Proxy/tplink.switch.if.info.port.speed_config[{#IFNUMBER}])<>0'
+            - uuid: cf22c03ae89945f4861293c9f674f6b9
               name: 'Interface #{#IFNUMBER}: Speed configuration'
               type: DEPENDENT
-              key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER},"speed_config"]'
+              key: 'tplink.switch.if.info.port.speed_config[{#IFNUMBER}]'
               delay: '0'
               history: 14d
               description: |
@@ -346,23 +348,23 @@ zabbix_export:
                   parameters:
                     - $.speed_config
               master_item:
-                key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
               trigger_prototypes:
-                - uuid: 2317537029b6406e8bc62da280a812e7
-                  expression: 'change(/Template TP-LINK SG108E WebParsing/tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER},"speed_config"])<>0'
+                - uuid: 33ab64ee8eeb4eceb6b058ef864ab4f0
+                  expression: 'change(/Template TP-LINK SG108E WebParsing by Zabbix Server or Proxy/tplink.switch.if.info.port.speed_config[{#IFNUMBER}])<>0'
                   recovery_mode: NONE
                   name: 'Interface #{#IFNUMBER}: Speed configuration changed'
                   opdata: '{ITEM.LASTVALUE}'
                   priority: AVERAGE
                   description: 'Speed configuration on port changed (admin changes)'
                   manual_close: 'YES'
-            - uuid: 8c1c7ccf703f468cbc7d9589f22ec5ba
+            - uuid: 1a215ee9db5a4ac1a3c3a178e13d0307
               name: 'Interface #{#IFNUMBER}: Transmitted packets'
               type: DEPENDENT
-              key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER},"transmitted_packets"]'
+              key: 'tplink.switch.if.info.port.transmitted_packets[{#IFNUMBER}]'
               delay: '0'
               history: 14d
               preprocessing:
@@ -373,14 +375,14 @@ zabbix_export:
                   parameters:
                     - ''
               master_item:
-                key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
-            - uuid: e40f63241c244e1f877428f018688f14
+            - uuid: 7a81d3bf29c1476fb3f998ea21832764
               name: 'Interface #{#IFNUMBER}: Transmitted packets error'
               type: DEPENDENT
-              key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER},"transmitted_packets_error"]'
+              key: 'tplink.switch.if.info.port.transmitted_packets_error[{#IFNUMBER}]'
               delay: '0'
               history: 14d
               preprocessing:
@@ -391,14 +393,14 @@ zabbix_export:
                   parameters:
                     - ''
               master_item:
-                key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
-            - uuid: d401cc274a154f149cdd2cdffaad3285
+            - uuid: f8e92aee91b444c896add3ef344e321d
               name: 'Interface #{#IFNUMBER}: Trunk status'
               type: DEPENDENT
-              key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER},"trunk_status"]'
+              key: 'tplink.switch.if.info.port.trunk_status[{#IFNUMBER}]'
               delay: '0'
               history: 14d
               description: 'Trunk status of the port'
@@ -409,13 +411,13 @@ zabbix_export:
                   parameters:
                     - $.trunk_status
               master_item:
-                key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
-            - uuid: f924018387704589bb9ee9db864e19bb
+            - uuid: bf08d82b797f4d388167dd27254ae2bc
               name: 'Interface #{#IFNUMBER}: Raw data'
-              key: 'tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER}]'
+              key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
               delay: 5m
               history: '0'
               trends: '0'
@@ -425,10 +427,10 @@ zabbix_export:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
           trigger_prototypes:
-            - uuid: a1b9e5fd1f564870abea592c25893c21
-              expression: 'last(/Template TP-LINK SG108E WebParsing/tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER},"operation_status"])=0 and last(/Template TP-LINK SG108E WebParsing/tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER},"adminstatus"])=1 and change(/Template TP-LINK SG108E WebParsing/tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER},"operation_status"])<>0'
+            - uuid: 40e64dea8eca4835b5ab23fd486955db
+              expression: 'last(/Template TP-LINK SG108E WebParsing by Zabbix Server or Proxy/tplink.switch.if.info.port.operation_status[{#IFNUMBER}])=0 and last(/Template TP-LINK SG108E WebParsing by Zabbix Server or Proxy/tplink.switch.if.info.port.admin_status[{#IFNUMBER}])=1 and change(/Template TP-LINK SG108E WebParsing by Zabbix Server or Proxy/tplink.switch.if.info.port.operation_status[{#IFNUMBER}])<>0'
               recovery_mode: RECOVERY_EXPRESSION
-              recovery_expression: 'last(/Template TP-LINK SG108E WebParsing/tplink.switch.if.info[{$SW.IP},{$SW.USER},{$SW.PASS},{#IFNUMBER},"operation_status"])=1'
+              recovery_expression: 'last(/Template TP-LINK SG108E WebParsing by Zabbix Server or Proxy/tplink.switch.if.info.port.operation_status[{#IFNUMBER}])=1 or last(/Template TP-LINK SG108E WebParsing by Zabbix Server or Proxy/tplink.switch.if.info.port.admin_status[{#IFNUMBER}])=0'
               name: 'Interface #{#IFNUMBER}: Link down'
               priority: WARNING
               description: 'Interface Admin status is enabled but nothing is connected. Trigger will only appear once. If trigger is manually closed, doesn''t appear until it''s connected and disconnected again.'
@@ -451,14 +453,14 @@ zabbix_export:
           value: admin
           description: 'Web Username'
       valuemaps:
-        - uuid: 83d07f5d2c0b410d954fc1f98c12ce74
+        - uuid: b84692c68efd4f04850fb55ae1fe7516
           name: EnabledDisabled
           mappings:
             - value: '0'
               newvalue: Disabled
             - value: '1'
               newvalue: Enabled
-        - uuid: 302ae8fd41134d8a9422ae962cb8b843
+        - uuid: 574599c4fd1e493ba2b6311b80ad51d9
           name: InterfaceSpeedConfiguration
           mappings:
             - value: '0'
@@ -475,10 +477,10 @@ zabbix_export:
               newvalue: '100 Mbps Full Duplex'
             - value: '6'
               newvalue: '1000 Mbps Full Duplex'
-        - uuid: e40dc01b1dd743b3a06f104e8b1b6dc2
+        - uuid: 5969771d654e44f99b20041b74dd1f69
           name: 'Operational status'
           mappings:
             - value: '0'
-              newvalue: 'Link down'
+              newvalue: down
             - value: '1'
-              newvalue: 'Link up'
+              newvalue: up

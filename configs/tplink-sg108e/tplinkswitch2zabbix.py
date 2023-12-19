@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 #######################################################################################
 # @author: Guille Rodriguez https://github.com/guillerg86
 # @version: 2023-12-18 01:30
@@ -53,6 +54,9 @@ class DAOSwitchTPLink():
         self.username = None
         self.password = None
 
+    def get_switch(self):
+        return self.switch
+
     def get_base_url(self):
         return f"http://{str(self.ip_address)}/"
 
@@ -69,8 +73,7 @@ class DAOSwitchTPLink():
             return session
         else:
             raise Exception(f"Error: HTTP Status code: {str(resp.status_code)}")
-    def get_sysinfo(self):
-        session = self.do_login()
+    def load_sysinfo(self, session):
         response = session.get(self.get_base_url() + "SystemInfoRpm.htm")
 
         pattern_rawdata = re.compile(r"var info_ds = ({\n?(.*?)\n?});$", re.MULTILINE | re.DOTALL)
@@ -88,13 +91,12 @@ class DAOSwitchTPLink():
         self.switch.firmware = values[5]
         self.switch.hardware = values[6]
 
-        return self.switch
 
     def __get_portsinfo_values_from_raw(self,key,rawdata):
         pattern = re.compile(key+":\\[([\\d,]+)\\]", re.MULTILINE | re.DOTALL)
         return pattern.search(rawdata).group(1).split(",")
 
-    def get_portsinfo(self):
+    def load_portsinfo(self, session):
 
         speed_actual_to_bps_translate_table = {
             "0": 0,
@@ -106,7 +108,6 @@ class DAOSwitchTPLink():
             "6": 1000 * 1000 * 1000
         }
 
-        session = self.do_login()
         resp_port_settings = session.get(self.get_base_url() + "PortSettingRpm.htm")
         resp_port_monitor = session.get(self.get_base_url() + "PortStatisticsRpm.htm")
 
@@ -143,7 +144,7 @@ class DAOSwitchTPLink():
             self.switch.ports[i].transmitted_packets_error = packets_info[i*4+1]
             self.switch.ports[i].received_packets = packets_info[i*4+2]
             self.switch.ports[i].received_packets_error = packets_info[i*4+3]
-        return self.switch
+
 
 def configure_parser():
     """
@@ -155,8 +156,8 @@ def configure_parser():
         prog="TP-Link SG108E to Zabbix",
         description="Export information from website to Zabbix"
     )
-    parser.add_argument('-a', '--action', required=True, help="sysinfo/discovery/portinfo",
-                        choices=["sysinfo", "discovery", "portinfo"])
+    parser.add_argument('-a', '--action', required=True, help="sysinfo/discovery/portinfo/allinfo",
+                        choices=["sysinfo", "discovery", "portinfo", "allinfo"])
     parser.add_argument('-i', '--ip-address', required=True, type=ip_address)
     parser.add_argument('-u', '--username', required=True)
     parser.add_argument('-p', '--password', required=True)
@@ -174,24 +175,37 @@ if __name__ == '__main__':
     dao.password = args.password
 
     if args.action == "sysinfo":
-        switch = dao.get_sysinfo()
-        print(json.dumps(switch.__dict__))
+        session = dao.do_login()
+        dao.load_sysinfo(session)
+        switch = dao.get_switch()
+        print(json.dumps(switch.__dict__,indent=4))
     elif args.action == "discovery":
-        switch = dao.get_portsinfo()
+        session = dao.do_login()
+        dao.load_portsinfo(session)
+        switch = dao.get_switch()
         print(json.dumps({"interfaces": [ {
             "{#IFNUMBER}": port.port_number,
             "{#IFADMINSTATUS}": port.admin_status
-        } for port in switch.ports]}))
+        } for port in switch.ports]},indent=4))
     elif args.action == "portinfo":
         if args.port_number <= 0:
             print("Error: Port need to be bigger than 0. (1 <-> MAX_PORTS)")
             exit(3)
-
-        switch = dao.get_portsinfo()
+        session = dao.do_login()
+        dao.load_portsinfo(session)
+        switch = dao.get_switch()
         if args.port_number > len(switch.ports):
             print(f"Error: Port needs to be between 1 and {str(len(switch.ports))} (max-ports of this switch)")
             exit(4)
         # Substract 1 to number sent, port 1 is on position 0 of the array
         port = switch.ports[args.port_number - 1]
-        print(json.dumps(port.__dict__))
+        print(json.dumps(port.__dict__,indent=4))
+    elif args.action == "allinfo":
+        session = dao.do_login()
+        dao.load_sysinfo(session)
+        dao.load_portsinfo(session)
+        switch = dao.get_switch()
+        # Converting object
+        switch.ports = [vars(port) for port in switch.ports]
+        print(json.dumps(vars(switch), indent=4))
 
