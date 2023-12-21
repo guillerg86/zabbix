@@ -18,6 +18,7 @@ zabbix_export:
           type: DEPENDENT
           key: tplink.switch.sysinfo.firmware
           delay: '0'
+          history: 30d
           trends: '0'
           value_type: CHAR
           preprocessing:
@@ -25,7 +26,7 @@ zabbix_export:
               parameters:
                 - $.firmware
           master_item:
-            key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,sysinfo]'
+            key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,allinfo]'
           tags:
             - tag: Application
               value: General
@@ -42,6 +43,7 @@ zabbix_export:
           type: DEPENDENT
           key: tplink.switch.sysinfo.hardware
           delay: '0'
+          history: 30d
           trends: '0'
           value_type: CHAR
           preprocessing:
@@ -49,7 +51,7 @@ zabbix_export:
               parameters:
                 - $.hardware
           master_item:
-            key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,sysinfo]'
+            key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,allinfo]'
           tags:
             - tag: Application
               value: General
@@ -66,6 +68,7 @@ zabbix_export:
           type: DEPENDENT
           key: tplink.switch.sysinfo.hostname
           delay: '0'
+          history: 30d
           trends: '0'
           value_type: CHAR
           preprocessing:
@@ -73,7 +76,7 @@ zabbix_export:
               parameters:
                 - $.description
           master_item:
-            key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,sysinfo]'
+            key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,allinfo]'
           tags:
             - tag: Application
               value: General
@@ -90,6 +93,7 @@ zabbix_export:
           type: DEPENDENT
           key: tplink.switch.sysinfo.mac_address
           delay: '0'
+          history: 30d
           trends: '0'
           value_type: CHAR
           preprocessing:
@@ -97,7 +101,7 @@ zabbix_export:
               parameters:
                 - $.mac_address
           master_item:
-            key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,sysinfo]'
+            key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,allinfo]'
           tags:
             - tag: Application
               value: General
@@ -110,10 +114,10 @@ zabbix_export:
               description: 'MAC address has been changed'
               manual_close: 'YES'
         - uuid: cc1ea5d94dae4f498498e2105eb3baca
-          name: 'System Info Raw Data'
+          name: 'Raw data'
           type: EXTERNAL
-          key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,sysinfo]'
-          delay: 1h
+          key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,allinfo]'
+          delay: 3m
           history: '0'
           trends: '0'
           value_type: TEXT
@@ -155,9 +159,9 @@ zabbix_export:
               preprocessing:
                 - type: JSONPATH
                   parameters:
-                    - $.admin_status
+                    - '$.ports[{#JSON.INDEX}].admin_status'
               master_item:
-                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,allinfo]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
@@ -177,9 +181,9 @@ zabbix_export:
               preprocessing:
                 - type: JSONPATH
                   parameters:
-                    - $.flowcontrol_config
+                    - '$.ports[{#JSON.INDEX}].flowcontrol_config'
               master_item:
-                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,allinfo]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
@@ -199,9 +203,9 @@ zabbix_export:
               preprocessing:
                 - type: JSONPATH
                   parameters:
-                    - $.flowcontrol_config
+                    - '$.ports[{#JSON.INDEX}].flowcontrol_config'
               master_item:
-                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,allinfo]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
@@ -226,9 +230,9 @@ zabbix_export:
               preprocessing:
                 - type: JSONPATH
                   parameters:
-                    - $.operation_status
+                    - '$.ports[{#JSON.INDEX}].operation_status'
               master_item:
-                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,allinfo]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
@@ -242,12 +246,12 @@ zabbix_export:
               preprocessing:
                 - type: JSONPATH
                   parameters:
-                    - $.received_packets
+                    - '$.ports[{#JSON.INDEX}].received_packets'
                 - type: SIMPLE_CHANGE
                   parameters:
                     - ''
               master_item:
-                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,allinfo]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
@@ -261,12 +265,12 @@ zabbix_export:
               preprocessing:
                 - type: JSONPATH
                   parameters:
-                    - $.received_packets_error
+                    - '$.ports[{#JSON.INDEX}].received_packets_error'
                 - type: SIMPLE_CHANGE
                   parameters:
                     - ''
               master_item:
-                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,allinfo]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
@@ -290,9 +294,9 @@ zabbix_export:
               preprocessing:
                 - type: JSONPATH
                   parameters:
-                    - $.speed_actual
+                    - '$.ports[{#JSON.INDEX}].speed_actual'
               master_item:
-                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,allinfo]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
@@ -304,14 +308,12 @@ zabbix_export:
               history: 14d
               units: bps
               description: 'Speed on port'
-              valuemap:
-                name: InterfaceSpeedConfiguration
               preprocessing:
                 - type: JSONPATH
                   parameters:
-                    - $.speed_bps
+                    - '$.ports[{#JSON.INDEX}].speed_bps'
               master_item:
-                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,allinfo]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
@@ -346,9 +348,9 @@ zabbix_export:
               preprocessing:
                 - type: JSONPATH
                   parameters:
-                    - $.speed_config
+                    - '$.ports[{#JSON.INDEX}].speed_config'
               master_item:
-                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,allinfo]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
@@ -370,12 +372,12 @@ zabbix_export:
               preprocessing:
                 - type: JSONPATH
                   parameters:
-                    - $.transmitted_packets
+                    - '$.ports[{#JSON.INDEX}].transmitted_packets'
                 - type: SIMPLE_CHANGE
                   parameters:
                     - ''
               master_item:
-                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,allinfo]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
@@ -388,12 +390,12 @@ zabbix_export:
               preprocessing:
                 - type: JSONPATH
                   parameters:
-                    - $.transmitted_packets_error
+                    - '$.ports[{#JSON.INDEX}].transmitted_packets_error'
                 - type: SIMPLE_CHANGE
                   parameters:
                     - ''
               master_item:
-                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,allinfo]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'
@@ -409,21 +411,9 @@ zabbix_export:
               preprocessing:
                 - type: JSONPATH
                   parameters:
-                    - $.trunk_status
+                    - '$.ports[{#JSON.INDEX}].trunk_status'
               master_item:
-                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
-              tags:
-                - tag: Application
-                  value: 'Interface-{#IFNUMBER}'
-            - uuid: bf08d82b797f4d388167dd27254ae2bc
-              name: 'Interface #{#IFNUMBER}: Raw data'
-              type: EXTERNAL
-              key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,portinfo,--port-number,{#IFNUMBER}]'
-              delay: 5m
-              history: '0'
-              trends: '0'
-              value_type: TEXT
-              description: 'RAW info about network port'
+                key: 'tplinkswitch2zabbix.py[-i,{$SW.IP},-u,{$SW.USER},-p,{$SW.PASS},-a,allinfo]'
               tags:
                 - tag: Application
                   value: 'Interface-{#IFNUMBER}'

@@ -132,16 +132,19 @@ Output be like:
 {
     "interfaces": [
         {
+            "{#JSON.INDEX}": 0,
             "{#IFNUMBER}": 1,
             "{#IFADMINSTATUS}": "1"
         },
         {
+            "{#JSON.INDEX}": 1,
             "{#IFNUMBER}": 2,
-            "{#IFADMINSTATUS}": "0"
+            "{#IFADMINSTATUS}": "1"
         },
-        ...
-		...
-		{
+		....
+		....
+        {
+            "{#JSON.INDEX}": 7,
             "{#IFNUMBER}": 8,
             "{#IFADMINSTATUS}": "1"
         }

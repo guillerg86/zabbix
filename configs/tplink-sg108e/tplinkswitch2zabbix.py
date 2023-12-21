@@ -184,9 +184,10 @@ if __name__ == '__main__':
         dao.load_portsinfo(session)
         switch = dao.get_switch()
         print(json.dumps({"interfaces": [ {
+            "{#JSON.INDEX}": index,
             "{#IFNUMBER}": port.port_number,
             "{#IFADMINSTATUS}": port.admin_status
-        } for port in switch.ports]},indent=4))
+        } for index, port in enumerate(switch.ports)]},indent=4))
     elif args.action == "portinfo":
         if args.port_number <= 0:
             print("Error: Port need to be bigger than 0. (1 <-> MAX_PORTS)")
@@ -205,7 +206,7 @@ if __name__ == '__main__':
         dao.load_sysinfo(session)
         dao.load_portsinfo(session)
         switch = dao.get_switch()
-        # Converting object
+        # Converting object ports to dict
         switch.ports = [vars(port) for port in switch.ports]
         print(json.dumps(vars(switch), indent=4))
 
