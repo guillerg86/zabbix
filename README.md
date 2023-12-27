@@ -1,5 +1,4 @@
-## Template TP-Link SG108E
+## Zabbix Templates and Scripts
 
-This project has been moved to a new repository: 
-<br>
-Link: [https://github.com/guillerg86/zabbix-template-sg108e](https://github.com/guillerg86/zabbix-template-sg108e)
+The scripts that I need or I create for monitor devices that I have or I work with.
+
